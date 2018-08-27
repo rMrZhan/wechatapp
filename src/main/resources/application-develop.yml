@@ -1,0 +1,38 @@
+server:
+  port: 8080
+  servlet:
+    path: /
+  tomcat:
+    accesslog:
+      buffered: true
+      directory: C:/Users/15944/Desktop/wechatapp/logs
+      enabled: true
+      file-date-format: .yyyy-MM-dd
+      pattern: common
+      prefix: access_log
+      rename-on-rotate: false
+      request-attributes-enabled: false
+      rotate: true
+      suffix: .log
+
+spring:
+  jackson:
+    # get correct time
+    time-zone: GMT+8
+  datasource:
+    url: jdbc:mysql://119.23.203.8:3306/jianghuling?characterEncoding=utf8
+    username: wuser
+    password: wuser@mc
+    driver-class-name: com.mysql.jdbc.Driver
+    tomcat:
+      max-wait: 10000
+      max-active: 30
+    hikari:
+      connection-timeout: 60000
+      idle-timeout: 60000
+      maximum-pool-size: 15
+      max-lifetime: 60000
+mybatis:
+  mapper-locations: /mapper/**Mapper.xml
+  type-aliases-package: top.jianghuling.wechatapp
+

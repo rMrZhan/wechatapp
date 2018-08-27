@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <!--class path: 本地MySQL JDBC驱动的绝对路径-->
+    <classPathEntry location="C:/Users/15944/.m2/repository/mysql/mysql-connector-java/5.1.21/mysql-connector-java-5.1.21.jar" />
+    <context id="DB2Tables" targetRuntime="MyBatis3">
+        <commentGenerator>
+            <property name="suppressDate" value="true"/>
+            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+        <jdbcConnection driverClass = "com.mysql.jdbc.Driver"
+                        connectionURL = "jdbc:mysql://119.23.203.8:3306/jianghuling?characterEncoding=utf8"
+                        userId = "wuser"
+                        password = "wuser@mc">
+            <!--忽略MySQL自带表-->
+            <property name="nullCatalogMeansCurrent" value="true" />
+        </jdbcConnection>
+
+        <javaTypeResolver >
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+
+        <!-- 生成模型的包名和位置-->
+        <!--targetProject: 项目的本地路径-->
+        <javaModelGenerator targetPackage="top.jianghuling.wechatapp.entity" targetProject="C:/Users/15944/Desktop/wechatapp/src/main/java">
+            <property name="enableSubPackages" value="true" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+
+        <!-- 生成映射文件的包名和位置-->
+        <sqlMapGenerator targetPackage="mapper"  targetProject="C:/Users/15944/Desktop/wechatapp/src/main/resources">
+            <property name="enableSubPackages" value="true" />
+        </sqlMapGenerator>
+
+        <!-- 生成DAO的包名和位置-->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="top.jianghuling.wechatapp.dao"  targetProject="C:/Users/15944/Desktop/wechatapp/src/main/java">
+            <property name="enableSubPackages" value="true" />
+        </javaClientGenerator>
+
+        <!--建立数据库中的表与类的映射关系-->
+        <!-- 要生成的表 tableName是数据库中的表名或视图名 domainObjectName是实体类名-->
+        <table tableName="user" domainObjectName="User"/>
+        <table tableName="order_release" domainObjectName="OrderRelease"/>
+        <table tableName="order_accept" domainObjectName="OrderAccept"/>
+
+
+    </context>
+</generatorConfiguration>
