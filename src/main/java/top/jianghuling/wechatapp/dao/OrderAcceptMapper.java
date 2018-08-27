@@ -1,10 +1,15 @@
 package top.jianghuling.wechatapp.dao;
 
 import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 import top.jianghuling.wechatapp.entity.OrderAccept;
 import top.jianghuling.wechatapp.entity.OrderAcceptExample;
 
+@Mapper
+@Repository
 public interface OrderAcceptMapper {
     long countByExample(OrderAcceptExample example);
 

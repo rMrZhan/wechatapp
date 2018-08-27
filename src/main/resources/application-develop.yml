@@ -35,4 +35,12 @@ spring:
 mybatis:
   mapper-locations: /mapper/**Mapper.xml
   type-aliases-package: top.jianghuling.wechatapp
+Constants:
+  AcademicOfficeUrl: http://202.115.47.141/loginAction.do
+  SMSAppid: 1400131578
+  SMSAppkey: cf39a358ee15732ad6e63eadea455248
+  SMSTemplateId: 181521
+  SMSSign: 江湖令科技有限公司
+  CodeInvalidTime: 5
+
 

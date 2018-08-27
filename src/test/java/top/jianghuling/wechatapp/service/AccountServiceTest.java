@@ -1,4 +1,4 @@
-package top.jianghuling.wechatapp.utils;
+package top.jianghuling.wechatapp.service;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,24 +8,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.junit.Assert.*;
 
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
-public class VerifyTest {
-
+public class AccountServiceTest {
     @Autowired
-    Verify verify;
+    private AccountService accountService;
 
     @Test
-    public void testVerifyStuId(){
-       System.out.println(verify.verifyStuId("2016141463082","16117X"));
-
-    }
-
-
-    @Test
-    public void verifyPhone() {
-        System.out.println(verify.verifyPhone("17711388724","8997"));
-
+    public void getMessageCode() {
+        accountService.getMessageCode("17711388724");
     }
 }
