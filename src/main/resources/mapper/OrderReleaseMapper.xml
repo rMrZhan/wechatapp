@@ -358,4 +358,20 @@
     limit #{startIndex},#{offset}
   </select>
 
+  <!--add by LMJ 限制取出的数量-->
+  <select id="selectByExampleLimit" parameterType="top.jianghuling.wechatapp.entity.OrderReleaseExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from order_release
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit #{startIndex},#{offset}
+  </select>
 </mapper>

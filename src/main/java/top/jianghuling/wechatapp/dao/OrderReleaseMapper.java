@@ -32,5 +32,8 @@ public interface OrderReleaseMapper {
 
     int updateByPrimaryKey(OrderRelease record);
 
+    //offest==取出的数据的条数 create by LMJ
     List<OrderRelease> selectByLimit(@Param("startIndex") int startIndex,@Param("offset") int offset);
+
+
 }

@@ -398,4 +398,16 @@
       express_type = #{expressType,jdbcType=VARCHAR}
     where order_id = #{orderId,jdbcType=VARCHAR}
   </update>
+
+  <!--add by LMJ 限制取出的数量-->
+  <select id="selectByTakerPhoneLimit" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from order_accept
+    where taker_phone = #{phone}
+    order by accept_time desc
+    limit #{startIndex},#{offset}
+  </select>
+
+
 </mapper>

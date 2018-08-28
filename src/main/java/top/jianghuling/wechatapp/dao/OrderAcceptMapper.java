@@ -32,4 +32,7 @@ public interface OrderAcceptMapper {
     int updateByPrimaryKeySelective(OrderAccept record);
 
     int updateByPrimaryKey(OrderAccept record);
-}
+
+    //限制取出的数据数量
+    List<OrderAccept> selectByTakerPhoneLimit(@Param("phone")String phone ,@Param("startIndex") int startIndex, @Param("offset")int offset);
+        }
