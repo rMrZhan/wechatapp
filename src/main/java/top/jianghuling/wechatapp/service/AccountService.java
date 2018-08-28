@@ -11,6 +11,7 @@ import top.jianghuling.wechatapp.dao.SmsCodeMapper;
 import top.jianghuling.wechatapp.dao.UserMapper;
 import top.jianghuling.wechatapp.entity.SmsCode;
 import top.jianghuling.wechatapp.entity.User;
+import top.jianghuling.wechatapp.utils.Result;
 import top.jianghuling.wechatapp.utils.Verify;
 
 import java.io.IOException;
@@ -42,22 +43,23 @@ public class AccountService {
 
 
     @Transactional
-    public String addNewUser(String phone, String address, String sutId, String stuPassword,String smsCode){
+    public int addNewUser(String phone, String address, String sutId, String stuPassword,String smsCode){
 
-        if(verify.verifyPhone(phone,smsCode)){
-            if(verify.verifyStuId(sutId,stuPassword)){
+        int resultOfVerifyPhone = verify.verifyPhone(phone,smsCode);
+        if(resultOfVerifyPhone==Result.SUCCESS){
+            if(verify.verifyStuId(sutId,stuPassword)==Result.SUCCESS){
                 User user = new User();
                 user.setAddress(address);
                 user.setPhone(phone);
                 user.setStuId(sutId);
                 user.setStuPassword(stuPassword);
                 userMapper.insert(user);
-                return "新建账号成功";
+                return Result.SUCCESS;
             }else{
-                return "学生账号或密码错误";
+                return Result.WRONG_STUID;
             }
         }else{
-            return "验证码错误";
+            return resultOfVerifyPhone;
         }
     }
 
@@ -90,7 +92,5 @@ public class AccountService {
             e.printStackTrace();
         }
     }
-
-
 
 }

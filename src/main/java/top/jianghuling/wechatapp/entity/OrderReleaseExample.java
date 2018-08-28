@@ -1001,6 +1001,76 @@ public class OrderReleaseExample {
             addCriterion("release_time not between", value1, value2, "releaseTime");
             return (Criteria) this;
         }
+
+        public Criteria andExpressTypeIsNull() {
+            addCriterion("express_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpressTypeIsNotNull() {
+            addCriterion("express_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpressTypeEqualTo(String value) {
+            addCriterion("express_type =", value, "expressType");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpressTypeNotEqualTo(String value) {
+            addCriterion("express_type <>", value, "expressType");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpressTypeGreaterThan(String value) {
+            addCriterion("express_type >", value, "expressType");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpressTypeGreaterThanOrEqualTo(String value) {
+            addCriterion("express_type >=", value, "expressType");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpressTypeLessThan(String value) {
+            addCriterion("express_type <", value, "expressType");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpressTypeLessThanOrEqualTo(String value) {
+            addCriterion("express_type <=", value, "expressType");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpressTypeLike(String value) {
+            addCriterion("express_type like", value, "expressType");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpressTypeNotLike(String value) {
+            addCriterion("express_type not like", value, "expressType");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpressTypeIn(List<String> values) {
+            addCriterion("express_type in", values, "expressType");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpressTypeNotIn(List<String> values) {
+            addCriterion("express_type not in", values, "expressType");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpressTypeBetween(String value1, String value2) {
+            addCriterion("express_type between", value1, value2, "expressType");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpressTypeNotBetween(String value1, String value2) {
+            addCriterion("express_type not between", value1, value2, "expressType");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

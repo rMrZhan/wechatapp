@@ -18,6 +18,7 @@
     <result column="taker_phone" jdbcType="CHAR" property="takerPhone" />
     <result column="accept_time" jdbcType="TIMESTAMP" property="acceptTime" />
     <result column="isfinished" jdbcType="TINYINT" property="isfinished" />
+    <result column="express_type" jdbcType="VARCHAR" property="expressType" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -80,7 +81,7 @@
   <sql id="Base_Column_List">
     order_id, goods_code, note, reward, host_name, host_phone, take_address, destination, 
     goods_weight, goods_volume, starttime, deadline, release_time, taker_phone, accept_time, 
-    isfinished
+    isfinished, express_type
   </sql>
   <select id="selectByExample" parameterType="top.jianghuling.wechatapp.entity.OrderAcceptExample" resultMap="BaseResultMap">
     select
@@ -118,13 +119,13 @@
       take_address, destination, goods_weight, 
       goods_volume, starttime, deadline, 
       release_time, taker_phone, accept_time, 
-      isfinished)
+      isfinished, express_type)
     values (#{orderId,jdbcType=VARCHAR}, #{goodsCode,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}, 
       #{reward,jdbcType=REAL}, #{hostName,jdbcType=VARCHAR}, #{hostPhone,jdbcType=CHAR}, 
       #{takeAddress,jdbcType=VARCHAR}, #{destination,jdbcType=VARCHAR}, #{goodsWeight,jdbcType=VARCHAR}, 
       #{goodsVolume,jdbcType=VARCHAR}, #{starttime,jdbcType=TIME}, #{deadline,jdbcType=TIME}, 
       #{releaseTime,jdbcType=TIMESTAMP}, #{takerPhone,jdbcType=CHAR}, #{acceptTime,jdbcType=TIMESTAMP}, 
-      #{isfinished,jdbcType=TINYINT})
+      #{isfinished,jdbcType=TINYINT}, #{expressType,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="top.jianghuling.wechatapp.entity.OrderAccept">
     insert into order_accept
@@ -177,6 +178,9 @@
       <if test="isfinished != null">
         isfinished,
       </if>
+      <if test="expressType != null">
+        express_type,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="orderId != null">
@@ -226,6 +230,9 @@
       </if>
       <if test="isfinished != null">
         #{isfinished,jdbcType=TINYINT},
+      </if>
+      <if test="expressType != null">
+        #{expressType,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -286,6 +293,9 @@
       <if test="record.isfinished != null">
         isfinished = #{record.isfinished,jdbcType=TINYINT},
       </if>
+      <if test="record.expressType != null">
+        express_type = #{record.expressType,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -308,7 +318,8 @@
       release_time = #{record.releaseTime,jdbcType=TIMESTAMP},
       taker_phone = #{record.takerPhone,jdbcType=CHAR},
       accept_time = #{record.acceptTime,jdbcType=TIMESTAMP},
-      isfinished = #{record.isfinished,jdbcType=TINYINT}
+      isfinished = #{record.isfinished,jdbcType=TINYINT},
+      express_type = #{record.expressType,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -361,6 +372,9 @@
       <if test="isfinished != null">
         isfinished = #{isfinished,jdbcType=TINYINT},
       </if>
+      <if test="expressType != null">
+        express_type = #{expressType,jdbcType=VARCHAR},
+      </if>
     </set>
     where order_id = #{orderId,jdbcType=VARCHAR}
   </update>
@@ -380,7 +394,8 @@
       release_time = #{releaseTime,jdbcType=TIMESTAMP},
       taker_phone = #{takerPhone,jdbcType=CHAR},
       accept_time = #{acceptTime,jdbcType=TIMESTAMP},
-      isfinished = #{isfinished,jdbcType=TINYINT}
+      isfinished = #{isfinished,jdbcType=TINYINT},
+      express_type = #{expressType,jdbcType=VARCHAR}
     where order_id = #{orderId,jdbcType=VARCHAR}
   </update>
 </mapper>

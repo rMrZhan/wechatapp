@@ -7,7 +7,6 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import top.jianghuling.wechatapp.entity.OrderRelease;
 import top.jianghuling.wechatapp.entity.OrderReleaseExample;
-
 @Mapper
 @Repository
 public interface OrderReleaseMapper {
@@ -32,4 +31,6 @@ public interface OrderReleaseMapper {
     int updateByPrimaryKeySelective(OrderRelease record);
 
     int updateByPrimaryKey(OrderRelease record);
+
+    List<OrderRelease> selectByLimit(@Param("startIndex") int startIndex,@Param("offset") int offset);
 }

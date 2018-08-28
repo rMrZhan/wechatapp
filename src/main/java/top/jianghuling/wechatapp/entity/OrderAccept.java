@@ -35,6 +35,8 @@ public class OrderAccept {
 
     private Byte isfinished;
 
+    private String expressType;
+
     public String getOrderId() {
         return orderId;
     }
@@ -161,5 +163,13 @@ public class OrderAccept {
 
     public void setIsfinished(Byte isfinished) {
         this.isfinished = isfinished;
+    }
+
+    public String getExpressType() {
+        return expressType;
+    }
+
+    public void setExpressType(String expressType) {
+        this.expressType = expressType == null ? null : expressType.trim();
     }
 }

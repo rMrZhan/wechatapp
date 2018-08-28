@@ -15,6 +15,7 @@
     <result column="starttime" jdbcType="TIME" property="starttime" />
     <result column="deadline" jdbcType="TIME" property="deadline" />
     <result column="release_time" jdbcType="TIMESTAMP" property="releaseTime" />
+    <result column="express_type" jdbcType="VARCHAR" property="expressType" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -76,7 +77,7 @@
   </sql>
   <sql id="Base_Column_List">
     order_id, goods_code, note, reward, host_name, host_phone, take_address, destination, 
-    goods_weight, goods_volume, starttime, deadline, release_time
+    goods_weight, goods_volume, starttime, deadline, release_time, express_type
   </sql>
   <select id="selectByExample" parameterType="top.jianghuling.wechatapp.entity.OrderReleaseExample" resultMap="BaseResultMap">
     select
@@ -113,12 +114,12 @@
       reward, host_name, host_phone, 
       take_address, destination, goods_weight, 
       goods_volume, starttime, deadline, 
-      release_time)
+      release_time, express_type)
     values (#{orderId,jdbcType=VARCHAR}, #{goodsCode,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}, 
       #{reward,jdbcType=REAL}, #{hostName,jdbcType=VARCHAR}, #{hostPhone,jdbcType=CHAR}, 
       #{takeAddress,jdbcType=VARCHAR}, #{destination,jdbcType=VARCHAR}, #{goodsWeight,jdbcType=VARCHAR}, 
       #{goodsVolume,jdbcType=VARCHAR}, #{starttime,jdbcType=TIME}, #{deadline,jdbcType=TIME}, 
-      #{releaseTime,jdbcType=TIMESTAMP})
+      #{releaseTime,jdbcType=TIMESTAMP}, #{expressType,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="top.jianghuling.wechatapp.entity.OrderRelease">
     insert into order_release
@@ -162,6 +163,9 @@
       <if test="releaseTime != null">
         release_time,
       </if>
+      <if test="expressType != null">
+        express_type,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="orderId != null">
@@ -202,6 +206,9 @@
       </if>
       <if test="releaseTime != null">
         #{releaseTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expressType != null">
+        #{expressType,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -253,6 +260,9 @@
       <if test="record.releaseTime != null">
         release_time = #{record.releaseTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.expressType != null">
+        express_type = #{record.expressType,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -272,7 +282,8 @@
       goods_volume = #{record.goodsVolume,jdbcType=VARCHAR},
       starttime = #{record.starttime,jdbcType=TIME},
       deadline = #{record.deadline,jdbcType=TIME},
-      release_time = #{record.releaseTime,jdbcType=TIMESTAMP}
+      release_time = #{record.releaseTime,jdbcType=TIMESTAMP},
+      express_type = #{record.expressType,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -316,6 +327,9 @@
       <if test="releaseTime != null">
         release_time = #{releaseTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="expressType != null">
+        express_type = #{expressType,jdbcType=VARCHAR},
+      </if>
     </set>
     where order_id = #{orderId,jdbcType=VARCHAR}
   </update>
@@ -332,7 +346,16 @@
       goods_volume = #{goodsVolume,jdbcType=VARCHAR},
       starttime = #{starttime,jdbcType=TIME},
       deadline = #{deadline,jdbcType=TIME},
-      release_time = #{releaseTime,jdbcType=TIMESTAMP}
+      release_time = #{releaseTime,jdbcType=TIMESTAMP},
+      express_type = #{expressType,jdbcType=VARCHAR}
     where order_id = #{orderId,jdbcType=VARCHAR}
   </update>
+  <!-- add by LMJ 2018/8/28-->
+  <select id = "selectByLimit" resultType="top.jianghuling.wechatapp.entity.OrderRelease">
+    select
+    <include refid="Base_Column_List" />
+    from order_release
+    limit #{startIndex},#{offset}
+  </select>
+
 </mapper>

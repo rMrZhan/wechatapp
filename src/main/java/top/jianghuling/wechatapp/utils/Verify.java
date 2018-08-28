@@ -27,7 +27,7 @@ public class Verify {
     private long codeInvalidTime;
 
 
-    public boolean verifyStuId(String stuId, String password){
+    public int verifyStuId(String stuId, String password){
         String param = "zjh="+stuId+"&mm="+password;
         PrintWriter out = null;
         BufferedReader in = null;
@@ -58,8 +58,8 @@ public class Verify {
                     result += line;
                 }
                 if(result.contains("学分制综合教务"))
-                    return true;
-                else return false;
+                    return Result.SUCCESS;
+                else return Result.WRONG_STUID;
             }catch (IOException ioe){
                 ioe.printStackTrace();
             }
@@ -74,24 +74,23 @@ public class Verify {
                     in.close();
             }catch (IOException i){
                 i.printStackTrace();
-
             }
 
         }
-        return false;
+        return Result.SERVER_BUSY;
 
     }
-    public boolean verifyPhone(String phone,String verifyCode){
+    public int verifyPhone(String phone,String verifyCode){
         SmsCode smsCode = smsCodeMapper.selectByPrimaryKey(phone);
         if(smsCode ==null)//没获取验证码
-            return false;
+            return Result.NO_SMS_CODE;
         else{
             Date createTime = smsCode.getCreateTime();
             if((System.currentTimeMillis()-createTime.getTime())<codeInvalidTime*60*1000){
                 if(verifyCode.equals(smsCode.getCode()))
-                    return true;
-                else return false;//验证码输入错误
-            }else return false;//验证码过期失效
+                    return Result.SUCCESS;
+                else return Result.WRONG_SMS_CODE;//验证码输入错误
+            }else return Result.SMS_CODE_EXPIRY;//验证码过期失效
 
         }
     }

@@ -29,6 +29,8 @@ public class OrderRelease {
 
     private Date releaseTime;
 
+    private String expressType;
+
     public String getOrderId() {
         return orderId;
     }
@@ -131,5 +133,13 @@ public class OrderRelease {
 
     public void setReleaseTime(Date releaseTime) {
         this.releaseTime = releaseTime;
+    }
+
+    public String getExpressType() {
+        return expressType;
+    }
+
+    public void setExpressType(String expressType) {
+        this.expressType = expressType == null ? null : expressType.trim();
     }
 }
