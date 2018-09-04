@@ -58,14 +58,14 @@ public class OrderServiceTest {
         System.out.println("fuck"+orderAccepts.get(2).getAcceptTime());
     }
 
-    @Test
-    public void browseMyOrderTest(){
-        List<OrderAccept> orderAccepts = orderService.browseMyOrder("17711388724",0,4);
-        System.out.println("fuck"+orderAccepts.get(0).getAcceptTime());
-        System.out.println("fuck"+orderAccepts.get(1).getAcceptTime());
-        System.out.println("fuck"+orderAccepts.get(2).getAcceptTime());
-        System.out.println("fuck"+orderAccepts.get(3).getAcceptTime());
-
-
-    }
+//    @Test
+//    public void browseMyOrderTest(){
+//        List<OrderAccept> orderAccepts = orderService.browseMyOrder("17711388724",0,4);
+//        System.out.println("fuck"+orderAccepts.get(0).getAcceptTime());
+//        System.out.println("fuck"+orderAccepts.get(1).getAcceptTime());
+//        System.out.println("fuck"+orderAccepts.get(2).getAcceptTime());
+//        System.out.println("fuck"+orderAccepts.get(3).getAcceptTime());
+//
+//
+//    }
 }
