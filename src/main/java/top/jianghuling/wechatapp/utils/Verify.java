@@ -25,10 +25,13 @@ public class Verify {
     private SmsCodeMapper smsCodeMapper;
     @Value("${Constants.CodeInvalidTime}")
     private long codeInvalidTime;
-
+    @Value("${Constants.WeChatAppId}")
+    private String appID;
+    @Value("${Constants.WeChatSecret}")
+    private String secret;
 
     public int verifyStuId(String stuId, String password){
-        String param = "zjh="+stuId+"&mm="+password;
+        String param = "j_username="+stuId+"&j_password="+password;
         PrintWriter out = null;
         BufferedReader in = null;
         String result=null;
@@ -57,7 +60,7 @@ public class Verify {
                     countLine--;
                     result += line;
                 }
-                if(result.contains("学分制综合教务"))
+                if(result.contains("URP综合教务系统首页"))
                     return Result.SUCCESS;
                 else return Result.WRONG_STUID;
             }catch (IOException ioe){
@@ -93,6 +96,43 @@ public class Verify {
             }else return Result.SMS_CODE_EXPIRY;//验证码过期失效
 
         }
+    }
+    public String getOpenID(String resCode) {
+        String result = "";
+
+        BufferedReader in = null;
+        try {
+            String urlNameString = "https://api.weixin.qq.com/sns/jscode2session?appid=" + appID + "&secret=" + secret + "&js_code=" + resCode + "&grant_type=authorization_code";
+
+            URL url = new URL(urlNameString);
+            URLConnection connection = url.openConnection();
+            // 设置通用的请求属性
+
+            connection.setRequestProperty("accept", "*/*");
+            connection.setRequestProperty("connection", "Keep-Alive");
+            connection.setRequestProperty("user-agent",
+                    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+            // 建立实际的连接
+            connection.connect();
+            in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String line;
+            while ((line = in.readLine()) != null) {
+                result += line;
+            }
+        } catch (Exception e) {
+            System.out.println("获取openid请求异常");
+            e.printStackTrace();
+        } finally {
+            try {
+                if (in != null) {
+                    in.close();
+                }
+            } catch (Exception e) {
+                System.out.println("关闭in异常");
+                e.printStackTrace();
+            }
+        }
+        return result;
     }
 
 
