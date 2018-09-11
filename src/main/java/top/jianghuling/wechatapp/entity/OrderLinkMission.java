@@ -2,7 +2,7 @@ package top.jianghuling.wechatapp.entity;
 
 import java.util.Date;
 
-public class OrderRelease {
+public class OrderLinkMission {
     private String orderId;
 
     private String goodsCode;
@@ -11,17 +11,15 @@ public class OrderRelease {
 
     private Float reward;
 
-    private String hostName;
+    private String takerPhone;
 
-    private String hostPhone;
+    private String hostName;
 
     private String takeAddress;
 
     private String destination;
 
     private String goodsWeight;
-
-    private String goodsVolume;
 
     private Date starttime;
 
@@ -31,12 +29,20 @@ public class OrderRelease {
 
     private String expressType;
 
+    private String releaserId;
+
+    private String hostPhone;
+
+    private Byte orderState;
+
+    private Date finishTime;
+
     public String getOrderId() {
         return orderId;
     }
 
     public void setOrderId(String orderId) {
-        this.orderId = orderId == null ? null : orderId.trim();
+        this.orderId = orderId;
     }
 
     public String getGoodsCode() {
@@ -44,7 +50,7 @@ public class OrderRelease {
     }
 
     public void setGoodsCode(String goodsCode) {
-        this.goodsCode = goodsCode == null ? null : goodsCode.trim();
+        this.goodsCode = goodsCode;
     }
 
     public String getNote() {
@@ -52,7 +58,7 @@ public class OrderRelease {
     }
 
     public void setNote(String note) {
-        this.note = note == null ? null : note.trim();
+        this.note = note;
     }
 
     public Float getReward() {
@@ -63,20 +69,20 @@ public class OrderRelease {
         this.reward = reward;
     }
 
+    public String getTakerPhone() {
+        return takerPhone;
+    }
+
+    public void setTakerPhone(String takerPhone) {
+        this.takerPhone = takerPhone;
+    }
+
     public String getHostName() {
         return hostName;
     }
 
     public void setHostName(String hostName) {
-        this.hostName = hostName == null ? null : hostName.trim();
-    }
-
-    public String getHostPhone() {
-        return hostPhone;
-    }
-
-    public void setHostPhone(String hostPhone) {
-        this.hostPhone = hostPhone == null ? null : hostPhone.trim();
+        this.hostName = hostName;
     }
 
     public String getTakeAddress() {
@@ -84,7 +90,7 @@ public class OrderRelease {
     }
 
     public void setTakeAddress(String takeAddress) {
-        this.takeAddress = takeAddress == null ? null : takeAddress.trim();
+        this.takeAddress = takeAddress;
     }
 
     public String getDestination() {
@@ -92,7 +98,7 @@ public class OrderRelease {
     }
 
     public void setDestination(String destination) {
-        this.destination = destination == null ? null : destination.trim();
+        this.destination = destination;
     }
 
     public String getGoodsWeight() {
@@ -100,15 +106,7 @@ public class OrderRelease {
     }
 
     public void setGoodsWeight(String goodsWeight) {
-        this.goodsWeight = goodsWeight == null ? null : goodsWeight.trim();
-    }
-
-    public String getGoodsVolume() {
-        return goodsVolume;
-    }
-
-    public void setGoodsVolume(String goodsVolume) {
-        this.goodsVolume = goodsVolume == null ? null : goodsVolume.trim();
+        this.goodsWeight = goodsWeight;
     }
 
     public Date getStarttime() {
@@ -140,6 +138,38 @@ public class OrderRelease {
     }
 
     public void setExpressType(String expressType) {
-        this.expressType = expressType == null ? null : expressType.trim();
+        this.expressType = expressType;
+    }
+
+    public String getReleaserId() {
+        return releaserId;
+    }
+
+    public void setReleaserId(String releaserId) {
+        this.releaserId = releaserId;
+    }
+
+    public String getHostPhone() {
+        return hostPhone;
+    }
+
+    public void setHostPhone(String hostPhone) {
+        this.hostPhone = hostPhone;
+    }
+
+    public Byte getOrderState() {
+        return orderState;
+    }
+
+    public void setOrderState(Byte orderState) {
+        this.orderState = orderState;
+    }
+
+    public Date getFinishTime() {
+        return finishTime;
+    }
+
+    public void setFinishTime(Date finishTime) {
+        this.finishTime = finishTime;
     }
 }

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="top.jianghuling.wechatapp.dao.UserMapper">
-  <resultMap id="BaseResultMap" type="top.jianghuling.wechatapp.entity.User">
-    <id column="phone" jdbcType="CHAR" property="phone" />
+<mapper namespace="top.jianghuling.wechatapp.dao.UserInfoMapper">
+  <resultMap id="BaseResultMap" type="top.jianghuling.wechatapp.entity.UserInfo">
+    <id column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="phone" jdbcType="CHAR" property="phone" />
     <result column="address" jdbcType="VARCHAR" property="address" />
     <result column="stu_id" jdbcType="VARCHAR" property="stuId" />
     <result column="stu_password" jdbcType="VARCHAR" property="stuPassword" />
@@ -66,15 +67,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    phone, address, stu_id, stu_password
+    user_id, phone, address, stu_id, stu_password
   </sql>
-  <select id="selectByExample" parameterType="top.jianghuling.wechatapp.entity.UserExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="top.jianghuling.wechatapp.entity.UserInfoExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from user
+    from user_info
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -85,28 +86,31 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from user
-    where phone = #{phone,jdbcType=CHAR}
+    from user_info
+    where user_id = #{userId,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from user
-    where phone = #{phone,jdbcType=CHAR}
+    delete from user_info
+    where user_id = #{userId,jdbcType=VARCHAR}
   </delete>
-  <delete id="deleteByExample" parameterType="top.jianghuling.wechatapp.entity.UserExample">
-    delete from user
+  <delete id="deleteByExample" parameterType="top.jianghuling.wechatapp.entity.UserInfoExample">
+    delete from user_info
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="top.jianghuling.wechatapp.entity.User">
-    insert into user (phone, address, stu_id, 
-      stu_password)
-    values (#{phone,jdbcType=CHAR}, #{address,jdbcType=VARCHAR}, #{stuId,jdbcType=VARCHAR}, 
-      #{stuPassword,jdbcType=VARCHAR})
+  <insert id="insert" parameterType="top.jianghuling.wechatapp.entity.UserInfo">
+    insert into user_info (user_id, phone, address, 
+      stu_id, stu_password)
+    values (#{userId,jdbcType=VARCHAR}, #{phone,jdbcType=CHAR}, #{address,jdbcType=VARCHAR}, 
+      #{stuId,jdbcType=VARCHAR}, #{stuPassword,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="top.jianghuling.wechatapp.entity.User">
-    insert into user
+  <insert id="insertSelective" parameterType="top.jianghuling.wechatapp.entity.UserInfo">
+    insert into user_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
       <if test="phone != null">
         phone,
       </if>
@@ -121,6 +125,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
       <if test="phone != null">
         #{phone,jdbcType=CHAR},
       </if>
@@ -135,15 +142,18 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="top.jianghuling.wechatapp.entity.UserExample" resultType="java.lang.Long">
-    select count(*) from user
+  <select id="countByExample" parameterType="top.jianghuling.wechatapp.entity.UserInfoExample" resultType="java.lang.Long">
+    select count(*) from user_info
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update user
+    update user_info
     <set>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=VARCHAR},
+      </if>
       <if test="record.phone != null">
         phone = #{record.phone,jdbcType=CHAR},
       </if>
@@ -162,8 +172,9 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update user
-    set phone = #{record.phone,jdbcType=CHAR},
+    update user_info
+    set user_id = #{record.userId,jdbcType=VARCHAR},
+      phone = #{record.phone,jdbcType=CHAR},
       address = #{record.address,jdbcType=VARCHAR},
       stu_id = #{record.stuId,jdbcType=VARCHAR},
       stu_password = #{record.stuPassword,jdbcType=VARCHAR}
@@ -171,9 +182,12 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="top.jianghuling.wechatapp.entity.User">
-    update user
+  <update id="updateByPrimaryKeySelective" parameterType="top.jianghuling.wechatapp.entity.UserInfo">
+    update user_info
     <set>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=CHAR},
+      </if>
       <if test="address != null">
         address = #{address,jdbcType=VARCHAR},
       </if>
@@ -184,13 +198,14 @@
         stu_password = #{stuPassword,jdbcType=VARCHAR},
       </if>
     </set>
-    where phone = #{phone,jdbcType=CHAR}
+    where user_id = #{userId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="top.jianghuling.wechatapp.entity.User">
-    update user
-    set address = #{address,jdbcType=VARCHAR},
+  <update id="updateByPrimaryKey" parameterType="top.jianghuling.wechatapp.entity.UserInfo">
+    update user_info
+    set phone = #{phone,jdbcType=CHAR},
+      address = #{address,jdbcType=VARCHAR},
       stu_id = #{stuId,jdbcType=VARCHAR},
       stu_password = #{stuPassword,jdbcType=VARCHAR}
-    where phone = #{phone,jdbcType=CHAR}
+    where user_id = #{userId,jdbcType=VARCHAR}
   </update>
 </mapper>

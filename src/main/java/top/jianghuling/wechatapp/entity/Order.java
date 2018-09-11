@@ -2,7 +2,7 @@ package top.jianghuling.wechatapp.entity;
 
 import java.util.Date;
 
-public class OrderAccept {
+public class Order {
     private String orderId;
 
     private String goodsCode;
@@ -13,15 +13,11 @@ public class OrderAccept {
 
     private String hostName;
 
-    private String hostPhone;
-
     private String takeAddress;
 
     private String destination;
 
     private String goodsWeight;
-
-    private String goodsVolume;
 
     private Date starttime;
 
@@ -29,13 +25,13 @@ public class OrderAccept {
 
     private Date releaseTime;
 
-    private String takerPhone;
-
-    private Date acceptTime;
-
-    private Byte isfinished;
-
     private String expressType;
+
+    private String releaserId;
+
+    private String hostPhone;
+
+    private Byte orderState;
 
     public String getOrderId() {
         return orderId;
@@ -77,14 +73,6 @@ public class OrderAccept {
         this.hostName = hostName == null ? null : hostName.trim();
     }
 
-    public String getHostPhone() {
-        return hostPhone;
-    }
-
-    public void setHostPhone(String hostPhone) {
-        this.hostPhone = hostPhone == null ? null : hostPhone.trim();
-    }
-
     public String getTakeAddress() {
         return takeAddress;
     }
@@ -107,14 +95,6 @@ public class OrderAccept {
 
     public void setGoodsWeight(String goodsWeight) {
         this.goodsWeight = goodsWeight == null ? null : goodsWeight.trim();
-    }
-
-    public String getGoodsVolume() {
-        return goodsVolume;
-    }
-
-    public void setGoodsVolume(String goodsVolume) {
-        this.goodsVolume = goodsVolume == null ? null : goodsVolume.trim();
     }
 
     public Date getStarttime() {
@@ -141,35 +121,35 @@ public class OrderAccept {
         this.releaseTime = releaseTime;
     }
 
-    public String getTakerPhone() {
-        return takerPhone;
-    }
-
-    public void setTakerPhone(String takerPhone) {
-        this.takerPhone = takerPhone == null ? null : takerPhone.trim();
-    }
-
-    public Date getAcceptTime() {
-        return acceptTime;
-    }
-
-    public void setAcceptTime(Date acceptTime) {
-        this.acceptTime = acceptTime;
-    }
-
-    public Byte getIsfinished() {
-        return isfinished;
-    }
-
-    public void setIsfinished(Byte isfinished) {
-        this.isfinished = isfinished;
-    }
-
     public String getExpressType() {
         return expressType;
     }
 
     public void setExpressType(String expressType) {
         this.expressType = expressType == null ? null : expressType.trim();
+    }
+
+    public String getReleaserId() {
+        return releaserId;
+    }
+
+    public void setReleaserId(String releaserId) {
+        this.releaserId = releaserId == null ? null : releaserId.trim();
+    }
+
+    public String getHostPhone() {
+        return hostPhone;
+    }
+
+    public void setHostPhone(String hostPhone) {
+        this.hostPhone = hostPhone == null ? null : hostPhone.trim();
+    }
+
+    public Byte getOrderState() {
+        return orderState;
+    }
+
+    public void setOrderState(Byte orderState) {
+        this.orderState = orderState;
     }
 }

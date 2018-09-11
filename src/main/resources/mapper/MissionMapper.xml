@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="top.jianghuling.wechatapp.dao.SmsCodeMapper">
-  <resultMap id="BaseResultMap" type="top.jianghuling.wechatapp.entity.SmsCode">
-    <id column="phone" jdbcType="CHAR" property="phone" />
-    <result column="code" jdbcType="VARCHAR" property="code" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+<mapper namespace="top.jianghuling.wechatapp.dao.MissionMapper">
+  <resultMap id="BaseResultMap" type="top.jianghuling.wechatapp.entity.Mission">
+    <result column="order_id" jdbcType="VARCHAR" property="orderId" />
+    <result column="taker_id" jdbcType="VARCHAR" property="takerId" />
+    <result column="accept_time" jdbcType="TIMESTAMP" property="acceptTime" />
+    <result column="mission_state" jdbcType="TINYINT" property="missionState" />
+    <result column="finish_time" jdbcType="TIMESTAMP" property="finishTime" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -65,15 +67,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    phone, code, create_time
+    order_id, taker_id, accept_time, mission_state, finish_time
   </sql>
-  <select id="selectByExample" parameterType="top.jianghuling.wechatapp.entity.SmsCodeExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="top.jianghuling.wechatapp.entity.MissionExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from sms_code
+    from mission
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -81,72 +83,78 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from sms_code
-    where phone = #{phone,jdbcType=CHAR}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from sms_code
-    where phone = #{phone,jdbcType=CHAR}
-  </delete>
-  <delete id="deleteByExample" parameterType="top.jianghuling.wechatapp.entity.SmsCodeExample">
-    delete from sms_code
+  <delete id="deleteByExample" parameterType="top.jianghuling.wechatapp.entity.MissionExample">
+    delete from mission
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <!--插入on duplicate key update，有则更新，无则插入-->
-  <insert id="insert" parameterType="top.jianghuling.wechatapp.entity.SmsCode">
-    insert into sms_code (phone, code, create_time
-      )
-    values (#{phone,jdbcType=CHAR}, #{code,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
-      )
-      ON DUPLICATE KEY UPDATE create_time=#{createTime,jdbcType=TIMESTAMP}, code=#{code,jdbcType=VARCHAR}
+  <insert id="insert" parameterType="top.jianghuling.wechatapp.entity.Mission">
+    insert into mission (order_id, taker_id, accept_time, 
+      mission_state, finish_time)
+    values (#{orderId,jdbcType=VARCHAR}, #{takerId,jdbcType=VARCHAR}, #{acceptTime,jdbcType=TIMESTAMP}, 
+      #{missionState,jdbcType=TINYINT}, #{finishTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="top.jianghuling.wechatapp.entity.SmsCode">
-    insert into sms_code
+  <insert id="insertSelective" parameterType="top.jianghuling.wechatapp.entity.Mission">
+    insert into mission
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="phone != null">
-        phone,
+      <if test="orderId != null">
+        order_id,
       </if>
-      <if test="code != null">
-        code,
+      <if test="takerId != null">
+        taker_id,
       </if>
-      <if test="createTime != null">
-        create_time,
+      <if test="acceptTime != null">
+        accept_time,
+      </if>
+      <if test="missionState != null">
+        mission_state,
+      </if>
+      <if test="finishTime != null">
+        finish_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="phone != null">
-        #{phone,jdbcType=CHAR},
+      <if test="orderId != null">
+        #{orderId,jdbcType=VARCHAR},
       </if>
-      <if test="code != null">
-        #{code,jdbcType=VARCHAR},
+      <if test="takerId != null">
+        #{takerId,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
+      <if test="acceptTime != null">
+        #{acceptTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="missionState != null">
+        #{missionState,jdbcType=TINYINT},
+      </if>
+      <if test="finishTime != null">
+        #{finishTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="top.jianghuling.wechatapp.entity.SmsCodeExample" resultType="java.lang.Long">
-    select count(*) from sms_code
+  <select id="countByExample" parameterType="top.jianghuling.wechatapp.entity.MissionExample" resultType="java.lang.Long">
+    select count(*) from mission
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update sms_code
+    update mission
     <set>
-      <if test="record.phone != null">
-        phone = #{record.phone,jdbcType=CHAR},
+      <if test="record.orderId != null">
+        order_id = #{record.orderId,jdbcType=VARCHAR},
       </if>
-      <if test="record.code != null">
-        code = #{record.code,jdbcType=VARCHAR},
+      <if test="record.takerId != null">
+        taker_id = #{record.takerId,jdbcType=VARCHAR},
       </if>
-      <if test="record.createTime != null">
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      <if test="record.acceptTime != null">
+        accept_time = #{record.acceptTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.missionState != null">
+        mission_state = #{record.missionState,jdbcType=TINYINT},
+      </if>
+      <if test="record.finishTime != null">
+        finish_time = #{record.finishTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null">
@@ -154,30 +162,22 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update sms_code
-    set phone = #{record.phone,jdbcType=CHAR},
-      code = #{record.code,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP}
+    update mission
+    set order_id = #{record.orderId,jdbcType=VARCHAR},
+      taker_id = #{record.takerId,jdbcType=VARCHAR},
+      accept_time = #{record.acceptTime,jdbcType=TIMESTAMP},
+      mission_state = #{record.missionState,jdbcType=TINYINT},
+      finish_time = #{record.finishTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="top.jianghuling.wechatapp.entity.SmsCode">
-    update sms_code
-    <set>
-      <if test="code != null">
-        code = #{code,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where phone = #{phone,jdbcType=CHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="top.jianghuling.wechatapp.entity.SmsCode">
-    update sms_code
-    set code = #{code,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP}
-    where phone = #{phone,jdbcType=CHAR}
-  </update>
+    <!--create by Jason 2018/9/10-->
+    <select id="findMissionByOrderId"  resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from mission
+        where order_id=#{orderId}
+
+    </select>
 </mapper>

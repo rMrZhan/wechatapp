@@ -3,14 +3,13 @@ package top.jianghuling.wechatapp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import top.jianghuling.wechatapp.dao.OrderAcceptMapper;
-import top.jianghuling.wechatapp.dao.OrderReleaseMapper;
-import top.jianghuling.wechatapp.entity.OrderAccept;
-import top.jianghuling.wechatapp.entity.OrderAcceptExample;
-import top.jianghuling.wechatapp.entity.OrderRelease;
-import top.jianghuling.wechatapp.entity.OrderReleaseExample;
-import top.jianghuling.wechatapp.results.Order;
-import top.jianghuling.wechatapp.utils.Result;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import top.jianghuling.wechatapp.dao.MissionMapper;
+import top.jianghuling.wechatapp.dao.OrderMapper;
+import top.jianghuling.wechatapp.entity.*;
+import top.jianghuling.wechatapp.results.BriefOrder;
+import top.jianghuling.wechatapp.utils.SecurityUtil;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -19,31 +18,45 @@ import java.util.List;
 
 @Service
 public class OrderService {
-    @Value("${Constants.ORDER_INAIR}")
-    private String ORDER_INAIR;
-    @Value("${Constants.ORDER_SUCCESS}")
-    private String ORDER_SUCCESS;
-    @Value("${Constants.ORDER_ONGOING}")
-    private String ORDER_ONGOING;
-    @Value("${Constants.ORDER_CANCLE}")
-    private String ORDER_CANCLE;
-    @Value("${Constants.ORDER_FAIL}")
-    private String ORDER_FAIL;
+
+    @Value("${Constants.MissionState.MISSION_SUCCESS")
+    private Byte MISSION_SUCCESS;
+    @Value("${Constants.MissionState.MISSION_FAIL")
+    private Byte MISSION_FAIL;
+    @Value("${Constants.MissionState.MISSION_ONGOING")
+    private Byte MISSION_ONGOING;
+    @Value("${Constants.MissionState.MISSION_CANCLE")
+    private Byte MISSION_CANCLE;
+    @Value("${Constants.OrderState.ORDER_INAIR}")
+    private Byte ORDER_INAIR;//订单刚刚发布
+    @Value("${Constants.OrderState.ORDER_SUCCESS}")
+    private Byte ORDER_SUCCESS;//订单完成
+    @Value("${Constants.OrderState.ORDER_ONGOING}")
+    private Byte ORDER_ONGOING;//任务在进行中
+    @Value("${Constants.OrderState.ORDER_CANCLE}")
+    private Byte ORDER_RELEASER_CANCLE;//订单被发布者取消
+    @Value("${Constants.OrderState.ORDER_FAIL}")
+    private Byte ORDER_FAIL;//订单失败（过期未拿到）
+    //如果订单被执行者主动取消，则将订单重新发布
 
 
     @Autowired
-    private OrderReleaseMapper orderReleaseMapper;
+    private OrderMapper orderMapper;
     @Autowired
-    private OrderAcceptMapper orderAcceptMapper;
+    private MissionMapper missionMapper;
 
     //发布订单
-    public int releaseOrder(String goodsCode, String note, float reward, String hostName, String hostPhone,
-                               String takeAddress, String destination, String goodsWeight, String goodsVolume,
+    @Transactional
+    public boolean releaseNewOrder(String releaserId,String goodsCode, String note, float reward, String hostName, String hostPhone,
+                               String takeAddress, String destination, String goodsWeight,
                                Date starttime, Date deadline,String expressType){
         try{
-            String orderId = hostPhone+goodsCode+(new Date())+expressType;
-            if(orderReleaseMapper.selectByPrimaryKey(orderId)!=null){
-                OrderRelease order = new OrderRelease();
+            String orderId = SecurityUtil.md5(hostPhone+goodsCode+(new Date()));
+
+                Order order = new Order();
+
+                order.setOrderState(ORDER_INAIR);
+                order.setReleaserId(releaserId);
                 order.setDeadline(deadline);
                 order.setDestination(destination);
                 order.setGoodsCode(goodsCode);
@@ -53,161 +66,118 @@ public class OrderService {
                 order.setOrderId(orderId);
                 order.setHostPhone(hostPhone);
                 order.setExpressType(expressType);
-                order.setGoodsVolume(goodsVolume);
                 order.setTakeAddress(takeAddress);
                 order.setReward(reward);
                 order.setStarttime(starttime);
                 Date date = new Date();
                 Timestamp releaseTime = new Timestamp(date.getTime());
                 order.setReleaseTime(releaseTime);
-                orderReleaseMapper.insert(order);
-                return Result.SUCCESS;
-            }else{
-                return Result.DUPLICATE_ORDER;
-            }
+                orderMapper.insert(order);
+                return true;
 
         }catch (Exception e){
-            e.printStackTrace();
-            return Result.WRONG_ORDER_INFO;
-
+            return false;
         }
     }
 
     //接单
-    public int acceptOrder(String takerPhone,String orderId){
-        OrderRelease orderRelease = orderReleaseMapper.selectByPrimaryKey(orderId);
-        OrderAccept orderAccept = new OrderAccept();
+    @Transactional
+    public boolean takeMission(String takerId,String orderId){
+
         Date date = new Date();
         Timestamp acceptTime = new Timestamp(date.getTime());
+        Mission mission = new Mission();
+        mission.setAcceptTime(acceptTime);
+        mission.setOrderId(orderId);
+        Order acceptOrder = orderMapper.selectByPrimaryKey(orderId);
+        if(acceptOrder.getOrderState()!=ORDER_INAIR){//被其他人接单或被发布者取消
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();//回滚
+            return false;
+        }
 
-        orderAccept.setOrderId(orderId);
-        orderAccept.setAcceptTime(acceptTime);
-        orderAccept.setDestination(orderRelease.getDestination());
-        orderAccept.setGoodsCode(orderRelease.getGoodsCode());
-        orderAccept.setGoodsVolume(orderRelease.getGoodsVolume());
-        orderAccept.setGoodsWeight(orderRelease.getGoodsWeight());
-        orderAccept.setHostName(orderRelease.getHostName());
-        orderAccept.setNote(orderRelease.getNote());
-        orderAccept.setHostPhone(orderRelease.getHostPhone());
-        orderAccept.setExpressType(orderRelease.getExpressType());
-        orderAccept.setIsfinished(new Byte(ORDER_ONGOING));
-        orderAccept.setTakeAddress(orderRelease.getTakeAddress());
-        orderAccept.setTakerPhone(takerPhone);
-        orderAccept.setStarttime(orderRelease.getStarttime());
-        orderAccept.setDeadline(orderRelease.getDeadline());
-        orderAccept.setReward(orderRelease.getReward());
-        orderAccept.setReleaseTime(orderRelease.getReleaseTime());
-
-        orderAcceptMapper.insert(orderAccept);
-        orderReleaseMapper.deleteByPrimaryKey(orderId);
-        return Result.SUCCESS;
+        else{
+            acceptOrder.setOrderState(ORDER_ONGOING);
+            mission.setMissionState(MISSION_ONGOING);
+            return true;
+        }
 
     }
 
     //发布者取消订单
-    public int cancleOrderByHost(String orderId){
-        if(orderReleaseMapper.selectByPrimaryKey(orderId)!=null){
-            orderReleaseMapper.deleteByPrimaryKey(orderId);
-            return Result.SUCCESS;
-        }else{
-            //TODO:订单已经被接收情况
-            return Result.SUCCESS;
-        }
+    public boolean cancleOrderByHost(String orderId){
+       Order order = orderMapper.selectByPrimaryKey(orderId);
+       if(order.getOrderState()==ORDER_ONGOING){
+           Mission mission = missionMapper.findMissionByOrderId(orderId);
+           mission.setMissionState(MISSION_CANCLE);
+           //TODO：扣费？
+       }
+        order.setOrderState(ORDER_RELEASER_CANCLE);
+       return true;
+
     }
 
     //任务接收者取消订单
-    public int cancleOrderByTaker(String orderId){
-        //TODO：惩罚
-        orderAcceptMapper.deleteByPrimaryKey(orderId);
-        return Result.SUCCESS;
+    public boolean abandonMission(String orderId){
+        try{
+            //TODO：惩罚
+            missionMapper.findMissionByOrderId(orderId).setMissionState(MISSION_FAIL);
+            orderMapper.selectByPrimaryKey(orderId).setOrderState(ORDER_INAIR);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+
     }
 
     //任务成功
-    public int missionSuccess(String orderId){
-        OrderAccept successOrder = new OrderAccept();
-        successOrder.setOrderId(orderId);
-        successOrder.setIsfinished(new Byte(ORDER_SUCCESS));
-        orderAcceptMapper.updateByPrimaryKeySelective(successOrder);
-        //TODO: 支付
-        return Result.SUCCESS;
+    public boolean missionSuccess(String orderId){
+        orderMapper.selectByPrimaryKey(orderId).setOrderState(ORDER_SUCCESS);
+        Mission mission=missionMapper.findMissionByOrderId(orderId);
+        mission.setMissionState(MISSION_SUCCESS);
+        mission.setFinishTime(new Timestamp(new Date().getTime()));
+        //TODO:支付
+        return true;
+
     }
 
 
     //任务失败
-    public int missionFailed(String orderId){
-        OrderAccept failOrder = new OrderAccept();
-        failOrder.setOrderId(orderId);
-        failOrder.setIsfinished(new Byte(ORDER_FAIL));
-        orderAcceptMapper.updateByPrimaryKeySelective(failOrder);
-        //TODO:支付
-        return Result.SUCCESS;
+    public boolean missionFailed(String orderId){
+        Mission mission = missionMapper.findMissionByOrderId(orderId);
+        mission.setMissionState(MISSION_FAIL);
+        mission.setFinishTime(new Timestamp(new Date().getTime()));
+        //TODO:扣费
+        return true;
+
     }
 
     //浏览未接单的订单
-    public List<Order> browseReleaseOrders(int indexStart, int offset){
-        List<OrderRelease> orderReleases= orderReleaseMapper.selectByLimit(indexStart,offset);
-        List<Order> orders = new ArrayList<>();
-        Order order = new Order();
-        for(OrderRelease orderRelease : orderReleases){
-            order.setDeadline(orderRelease.getDeadline());
-            order.setDestination(orderRelease.getDestination());
-            order.setExpressType(orderRelease.getExpressType());
-            order.setGoodsVolume(orderRelease.getGoodsVolume());
-            order.setGoodsWeight(orderRelease.getGoodsWeight());
-            order.setReward(orderRelease.getReward());
-            order.setStarttime(orderRelease.getStarttime());
-            orders.add(order);
-        }
-        return orders;
+    public List<BriefOrder> browseReleaseOrders(int pageNum, int pageSize){
+       return  orderMapper.selectBriefOrderByPage(pageNum,pageSize,ORDER_INAIR);
     }
 
     //浏览我接单的任务（包括历史任务，正在进行，取消的任务）
-    public List<OrderAccept> browseMyMissionRecords(String phone,int startIndex, int offset){
-        return orderAcceptMapper.selectByTakerPhoneLimit(phone,startIndex,offset);
+    public List<Order> browseMyMissionRecords(String takerId, int pageNum, int pageSize){
+        MissionExample me = new MissionExample();
+        MissionExample.Criteria meCriteria= me.createCriteria();
+        meCriteria.andTakerIdEqualTo(takerId);
+        List<Mission> missionList=missionMapper.selectByExample(me);
+        List<String> orderIds = new ArrayList<>();
+        for(Mission ms : missionList){
+            orderIds.add(ms.getOrderId());
+        }
+
+        OrderExample oe = new OrderExample();
+        OrderExample.Criteria oeCriteria = oe.createCriteria();
+        oeCriteria.andOrderIdIn(orderIds);
+        return orderMapper.selectByExample(oe).subList(pageNum*pageSize,pageSize);
+
     }
 
 
     //浏览我发布的
-    public List<OrderAccept> browseMyReleaseOrder(String phone,int startIndex, int offset){
-        OrderReleaseExample orderReleaseExample = new OrderReleaseExample();
-        OrderReleaseExample.Criteria criteriaRel = orderReleaseExample.createCriteria();
-        criteriaRel.andHostPhoneEqualTo(phone);
-        orderReleaseExample.setOrderByClause("release_time");
-        List<OrderRelease> releaseList = orderReleaseMapper.selectByExample(orderReleaseExample);
-        List<OrderAccept> list = new ArrayList<>();//统一格式，客户端接收到的都是OrderAccept
-        OrderAccept orderAccept = new OrderAccept();
-
-            for(OrderRelease orderRelease:releaseList){
-                orderAccept.setOrderId(orderRelease.getOrderId());
-                orderAccept.setAcceptTime(null);
-                orderAccept.setDestination(orderRelease.getDestination());
-                orderAccept.setGoodsCode(orderRelease.getGoodsCode());
-                orderAccept.setGoodsVolume(orderRelease.getGoodsVolume());
-                orderAccept.setGoodsWeight(orderRelease.getGoodsWeight());
-                orderAccept.setHostName(orderRelease.getHostName());
-                orderAccept.setNote(orderRelease.getNote());
-                orderAccept.setHostPhone(orderRelease.getHostPhone());
-                orderAccept.setExpressType(orderRelease.getExpressType());
-                orderAccept.setIsfinished(new Byte(ORDER_INAIR));
-                orderAccept.setTakeAddress(orderRelease.getTakeAddress());
-                orderAccept.setTakerPhone(null);
-                orderAccept.setStarttime(orderRelease.getStarttime());
-                orderAccept.setDeadline(orderRelease.getDeadline());
-                orderAccept.setReward(orderRelease.getReward());
-                orderAccept.setReleaseTime(orderRelease.getReleaseTime());
-                list.add(orderAccept);
-            }
-
-            OrderAcceptExample orderAcceptExample = new OrderAcceptExample();
-            OrderAcceptExample.Criteria criteriaAcp=orderAcceptExample.createCriteria();
-            criteriaAcp.andHostPhoneEqualTo(phone);
-            orderAcceptExample.setOrderByClause("release_time");//注意：根据发布时间排序
-            List<OrderAccept> orderAccepts = orderAcceptMapper.selectByExample(orderAcceptExample);
-            for(OrderAccept o: orderAccepts){
-                list.add(o);
-            }
-            return list.subList(startIndex,offset);
-
+    public List<OrderLinkMission> browseMyReleaseOrder(String userId, int pageNum, int pageSize){
+        return orderMapper.selectOrderMission(userId,pageNum*pageSize,pageSize);
     }
 
 }

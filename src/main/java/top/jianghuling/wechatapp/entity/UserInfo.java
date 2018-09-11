@@ -1,6 +1,8 @@
 package top.jianghuling.wechatapp.entity;
 
-public class User {
+public class UserInfo {
+    private String userId;
+
     private String phone;
 
     private String address;
@@ -8,6 +10,14 @@ public class User {
     private String stuId;
 
     private String stuPassword;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId == null ? null : userId.trim();
+    }
 
     public String getPhone() {
         return phone;
