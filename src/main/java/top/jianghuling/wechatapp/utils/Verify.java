@@ -1,92 +1,79 @@
 package top.jianghuling.wechatapp.utils;
 
+import org.apache.commons.httpclient.Cookie;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.cookie.CookiePolicy;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import top.jianghuling.wechatapp.dao.RedisDao;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
+
 
 @Component
 public class Verify {
 
-    @Value("${Constants.AcademicOfficeUrl}")
-    private  String AcademicOfficeUrl;
-    @Autowired
-    private SmsCodeMapper smsCodeMapper;
-    @Value("${Constants.CodeInvalidTime}")
+
+
+    @Value("${Constants.SMS.CodeInvalidTime}")
     private long codeInvalidTime;
 
 
     @Autowired
     private RedisDao redisDao;
 
-    public int verifyStuId(String stuId, String password){
-        String param = "j_username="+stuId+"&j_password="+password;
-        PrintWriter out = null;
-        BufferedReader in = null;
-        String result=null;
+    public boolean verifyStuId(String stuId, String password){
+        // 登陆 Url
+        String loginUrl = "http://zhjw.scu.edu.cn/j_spring_security_check";
+        // 需登陆后访问的 Url
+        String dataUrl = "http://zhjw.scu.edu.cn/index.jsp";
+        HttpClient httpClient = new HttpClient();
 
-        try{
-            URL url = new URL(AcademicOfficeUrl);
-            try{
-                String line;
-                int countLine=10;
-                URLConnection connection = url.openConnection();
-                connection.setRequestProperty("accept", "*/*");
-                connection.setRequestProperty("connection", "Keep-Alive");
-                connection.setRequestProperty("Accept-Charset", "UTF-8");
-                connection.setRequestProperty("user-agent",
-                        "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
-                connection.setDoInput(true);
-                connection.setDoOutput(true);
-                out = new PrintWriter(connection.getOutputStream());
-                //发送请求参数
-                out.print(param);
-                out.flush();
-                in = new BufferedReader(new InputStreamReader(
-                        connection.getInputStream(),"gb2312"));
-                //读取获取到的网页的前10行
-                while ((line = in.readLine()) != null && countLine>0) {
-                    countLine--;
-                    result += line;
-                }
-                if(result.contains("URP综合教务系统首页"))
-                    return ResultCode.SUCCESS;
-                else return ResultCode.WRONG_STUID;
-            }catch (IOException ioe){
-                ioe.printStackTrace();
+        // 模拟登陆，按实际服务器端要求选用 Post 或 Get 请求方式
+        PostMethod postMethod = new PostMethod(loginUrl);
+
+        // 设置登陆时要求的信息，用户名和密码
+        NameValuePair[] data = { new NameValuePair("j_username", stuId), new NameValuePair("j_password", password) ,new NameValuePair("j_captcha1", "error")};
+        postMethod.setRequestBody(data);
+        try {
+            // 设置 HttpClient 接收 Cookie,用与浏览器一样的策略
+            httpClient.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
+            int statusCode=httpClient.executeMethod(postMethod);
+
+            // 获得登陆后的 Cookie
+            Cookie[] cookies = httpClient.getState().getCookies();
+            StringBuffer tmpcookies = new StringBuffer();
+            for (Cookie c : cookies) {
+                tmpcookies.append(c.toString() + ";");
+                System.out.println("cookies = "+c.toString());
             }
-
-        }catch (MalformedURLException e){
-            e.printStackTrace();
-        }finally {
-            try{
-                if(out!=null)
-                    out.close();
-                if(in!=null)
-                    in.close();
-            }catch (IOException i){
-                i.printStackTrace();
+            if(statusCode==302){//重定向到新的URL
+                // 进行登陆后的操作
+                GetMethod getMethod = new GetMethod(dataUrl);
+                // 每次访问需授权的网址时需带上前面的 cookie 作为通行证
+                getMethod.setRequestHeader("cookie", tmpcookies.toString());
+                // 你还可以通过 PostMethod/GetMethod 设置更多的请求后数据
+                postMethod.setRequestHeader("Referer", "http://jwc.scu.edu.cn/");
+                postMethod.setRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36");
+                httpClient.executeMethod(getMethod);
+                // 打印出返回数据，检验一下是否成功
+                String text = getMethod.getResponseBodyAsString();
+                if(text.contains("URP综合教务系统首页"))
+                    return true;
             }
-
+            else {
+                return false;
+            }
         }
-        return ResultCode.SERVER_BUSY;
-
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return false;
     }
 
-//    public int verifyPhone(String phone,String verifyCode){
-//
-//
-//
-//    }
-
-
-
 }
+

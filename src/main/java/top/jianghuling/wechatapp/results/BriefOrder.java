@@ -13,6 +13,15 @@ public class BriefOrder {
     private Date releaseTime;
     private String expressType;
     private String orderId;
+    private int version;
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
 
     public String getOrderId() {
         return orderId;

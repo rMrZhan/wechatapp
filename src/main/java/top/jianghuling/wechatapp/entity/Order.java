@@ -33,6 +33,8 @@ public class Order {
 
     private Byte orderState;
 
+    private Integer version;
+
     public String getOrderId() {
         return orderId;
     }
@@ -151,5 +153,13 @@ public class Order {
 
     public void setOrderState(Byte orderState) {
         this.orderState = orderState;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 }

@@ -37,6 +37,16 @@ public class OrderLinkMission {
 
     private Date finishTime;
 
+    private String missionId;
+
+    public String getMissionId() {
+        return missionId;
+    }
+
+    public void setMissionId(String missionId) {
+        this.missionId = missionId;
+    }
+
     public String getOrderId() {
         return orderId;
     }

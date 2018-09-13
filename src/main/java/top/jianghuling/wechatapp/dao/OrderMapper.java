@@ -10,8 +10,8 @@ import top.jianghuling.wechatapp.entity.OrderExample;
 import top.jianghuling.wechatapp.entity.OrderLinkMission;
 import top.jianghuling.wechatapp.results.BriefOrder;
 
-@Repository
 @Mapper
+@Repository
 public interface OrderMapper {
     long countByExample(OrderExample example);
 
@@ -38,5 +38,7 @@ public interface OrderMapper {
     //created by Jason @2018/9/9
     List<BriefOrder> selectBriefOrderByPage(@Param("startIndex")int startIndex, @Param("pageSize")int pageSize, @Param("orderState")int orderState);
     //created by Jason @2018/9/11
-    List<OrderLinkMission> selectOrderMission(@Param("hostId")String hostId,@Param("startIndex")int startIndex,@Param("pageSize")int pageSize );
+    List<OrderLinkMission> selectOrderMission(@Param("hostId")String hostId, @Param("startIndex")int startIndex, @Param("pageSize")int pageSize );
+
+    int updateByKeyLimitVsn(Order record);
 }

@@ -17,6 +17,7 @@
     <result column="releaser_id" jdbcType="VARCHAR" property="releaserId" />
     <result column="host_phone" jdbcType="VARCHAR" property="hostPhone" />
     <result column="order_state" jdbcType="TINYINT" property="orderState" />
+    <result column="version" jdbcType="INTEGER" property="version" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -78,7 +79,8 @@
   </sql>
   <sql id="Base_Column_List">
     order_id, goods_code, note, reward, host_name, take_address, destination, goods_weight, 
-    starttime, deadline, release_time, express_type, releaser_id, host_phone, order_state
+    starttime, deadline, release_time, express_type, releaser_id, host_phone, order_state, 
+    version
   </sql>
   <select id="selectByExample" parameterType="top.jianghuling.wechatapp.entity.OrderExample" resultMap="BaseResultMap">
     select
@@ -115,14 +117,14 @@
       reward, host_name, take_address, 
       destination, goods_weight, starttime, 
       deadline, release_time, express_type, 
-      releaser_id, host_phone, order_state
-      )
+      releaser_id, host_phone, order_state, 
+      version)
     values (#{orderId,jdbcType=VARCHAR}, #{goodsCode,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}, 
       #{reward,jdbcType=REAL}, #{hostName,jdbcType=VARCHAR}, #{takeAddress,jdbcType=VARCHAR}, 
       #{destination,jdbcType=VARCHAR}, #{goodsWeight,jdbcType=VARCHAR}, #{starttime,jdbcType=TIME}, 
       #{deadline,jdbcType=TIME}, #{releaseTime,jdbcType=TIMESTAMP}, #{expressType,jdbcType=VARCHAR}, 
-      #{releaserId,jdbcType=VARCHAR}, #{hostPhone,jdbcType=VARCHAR}, #{orderState,jdbcType=TINYINT}
-      )
+      #{releaserId,jdbcType=VARCHAR}, #{hostPhone,jdbcType=VARCHAR}, #{orderState,jdbcType=TINYINT}, 
+      #{version,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="top.jianghuling.wechatapp.entity.Order">
     insert into express_order
@@ -172,6 +174,9 @@
       <if test="orderState != null">
         order_state,
       </if>
+      <if test="version != null">
+        version,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="orderId != null">
@@ -218,6 +223,9 @@
       </if>
       <if test="orderState != null">
         #{orderState,jdbcType=TINYINT},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -275,6 +283,9 @@
       <if test="record.orderState != null">
         order_state = #{record.orderState,jdbcType=TINYINT},
       </if>
+      <if test="record.version != null">
+        version = #{record.version,jdbcType=INTEGER},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -296,7 +307,8 @@
       express_type = #{record.expressType,jdbcType=VARCHAR},
       releaser_id = #{record.releaserId,jdbcType=VARCHAR},
       host_phone = #{record.hostPhone,jdbcType=VARCHAR},
-      order_state = #{record.orderState,jdbcType=TINYINT}
+      order_state = #{record.orderState,jdbcType=TINYINT},
+      version = #{record.version,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -346,6 +358,9 @@
       <if test="orderState != null">
         order_state = #{orderState,jdbcType=TINYINT},
       </if>
+      <if test="version != null">
+        version = #{version,jdbcType=INTEGER},
+      </if>
     </set>
     where order_id = #{orderId,jdbcType=VARCHAR}
   </update>
@@ -364,66 +379,91 @@
       express_type = #{expressType,jdbcType=VARCHAR},
       releaser_id = #{releaserId,jdbcType=VARCHAR},
       host_phone = #{hostPhone,jdbcType=VARCHAR},
-      order_state = #{orderState,jdbcType=TINYINT}
+      order_state = #{orderState,jdbcType=TINYINT},
+      version = #{version,jdbcType=INTEGER}
     where order_id = #{orderId,jdbcType=VARCHAR}
   </update>
 
-    <!--Created by Jason 2018/9/11-->
-    <resultMap id="BriefOrderMap" type="top.jianghuling.wechatapp.results.BriefOrder">
-        <id column="order_id" jdbcType="VARCHAR" property="orderId" />
-        <result column="note" jdbcType="VARCHAR" property="note" />
-        <result column="reward" jdbcType="REAL" property="reward" />
-        <result column="starttime" jdbcType="TIME" property="starttime" />
-        <result column="deadline" jdbcType="TIME" property="deadline" />
-        <result column="destination" jdbcType="VARCHAR" property="destination" />
-        <result column="release_time" jdbcType="TIMESTAMP" property="releaseTime" />
-        <result column="express_type" jdbcType="VARCHAR" property="expressType" />
-        <result column="goods_weight" jdbcType="VARCHAR" property="goodsWeight" />
-        <result column="take_address" jdbcType="VARCHAR" property="takeAddress" />
-    </resultMap>
-    <sql id="Brief_Order_List">
+  <!--Created by Jason 2018/9/11-->
+  <resultMap id="BriefOrderMap" type="top.jianghuling.wechatapp.results.BriefOrder">
+    <id column="order_id" jdbcType="VARCHAR" property="orderId" />
+    <result column="note" jdbcType="VARCHAR" property="note" />
+    <result column="reward" jdbcType="REAL" property="reward" />
+    <result column="starttime" jdbcType="TIME" property="starttime" />
+    <result column="deadline" jdbcType="TIME" property="deadline" />
+      <result column="version" jdbcType="INTEGER" property="version" />
+    <result column="destination" jdbcType="VARCHAR" property="destination" />
+    <result column="release_time" jdbcType="TIMESTAMP" property="releaseTime" />
+    <result column="express_type" jdbcType="VARCHAR" property="expressType" />
+    <result column="goods_weight" jdbcType="VARCHAR" property="goodsWeight" />
+    <result column="take_address" jdbcType="VARCHAR" property="takeAddress" />
+  </resultMap>
+  <sql id="Brief_Order_List">
     order_id, note, reward, take_address, destination, goods_weight,
     starttime, deadline, release_time, express_type,
   </sql>
-    <select id="selectBriefOrderByPage" resultMap="BriefOrderMap">
-        select
-        <include refid="Brief_Order_List"/>
-        from express_order
-        limit #{startIndex},#{pageSize}
-        where order_state=#{orderState}
-    </select>
+  <select id="selectBriefOrderByPage" resultMap="BriefOrderMap">
+    select
+    <include refid="Brief_Order_List"/>
+    from express_order
+    limit #{startIndex},#{pageSize}
+    where order_state=#{orderState}
+  </select>
 
-    <!--created by jason @2018/9/11-->
-    <resultMap id="OrderLinkMission" type="top.jianghuling.wechatapp.entity.OrderLinkMission">
-        <id column="order_id" jdbcType="VARCHAR" property="orderId" />
-        <result column="goods_code" jdbcType="VARCHAR" property="goodsCode" />
-        <result column="note" jdbcType="VARCHAR" property="note" />
-        <result column="reward" jdbcType="REAL" property="reward" />
-        <result column="host_name" jdbcType="VARCHAR" property="hostName" />
-        <result column="take_address" jdbcType="VARCHAR" property="takeAddress" />
-        <result column="destination" jdbcType="VARCHAR" property="destination" />
-        <result column="goods_weight" jdbcType="VARCHAR" property="goodsWeight" />
-        <result column="starttime" jdbcType="TIME" property="starttime" />
-        <result column="deadline" jdbcType="TIME" property="deadline" />
-        <result column="release_time" jdbcType="TIMESTAMP" property="releaseTime" />
-        <result column="express_type" jdbcType="VARCHAR" property="expressType" />
-        <result column="releaser_id" jdbcType="VARCHAR" property="releaserId" />
-        <result column="host_phone" jdbcType="VARCHAR" property="hostPhone" />
-        <result column="order_state" jdbcType="TINYINT" property="orderState" />
-        <result column="taker_phone" jdbcType="VARCHAR" property="takerPhone" />
-        <result column="taker_id"  jdbcType="VARCHAR" property="takerId" />
-    </resultMap>
-    <sql id="Order_Mission">
+  <!--created by jason @2018/9/11-->
+  <resultMap id="OrderLinkMission" type="top.jianghuling.wechatapp.entity.OrderLinkMission">
+    <id column="order_id" jdbcType="VARCHAR" property="orderId" />
+    <result column="goods_code" jdbcType="VARCHAR" property="goodsCode" />
+    <result column="note" jdbcType="VARCHAR" property="note" />
+    <result column="reward" jdbcType="REAL" property="reward" />
+    <result column="host_name" jdbcType="VARCHAR" property="hostName" />
+    <result column="take_address" jdbcType="VARCHAR" property="takeAddress" />
+    <result column="destination" jdbcType="VARCHAR" property="destination" />
+    <result column="goods_weight" jdbcType="VARCHAR" property="goodsWeight" />
+    <result column="starttime" jdbcType="TIME" property="starttime" />
+    <result column="deadline" jdbcType="TIME" property="deadline" />
+    <result column="release_time" jdbcType="TIMESTAMP" property="releaseTime" />
+    <result column="express_type" jdbcType="VARCHAR" property="expressType" />
+    <result column="releaser_id" jdbcType="VARCHAR" property="releaserId" />
+    <result column="host_phone" jdbcType="VARCHAR" property="hostPhone" />
+    <result column="order_state" jdbcType="TINYINT" property="orderState" />
+    <result column="taker_phone" jdbcType="VARCHAR" property="takerPhone" />
+    <result column="mission_id"  jdbcType="VARCHAR" property="missionId" />
+    <result column="taker_id"  jdbcType="VARCHAR" property="takerId" />
+  </resultMap>
+  <sql id="Order_Mission">
     order_id, goods_code, note, reward, host_name, take_address, destination, goods_weight,
     starttime, deadline, release_time, express_type, releaser_id, host_phone, order_state,
-    taker_phone,taker_id
+    taker_phone,taker_id,mission_id
   </sql>
-    <select id="selectOrderMission" resultMap="OrderLinkMission">
-        select
-        <include refid="Order_Mission"/>
-        from mission_order_view
-        where releaser_id=#{hostId}
-        limit #{startIndex},#{pageSize}
-    </select>
+  <select id="selectOrderMission" resultMap="OrderLinkMission">
+    select
+    <include refid="Order_Mission"/>
+    from mission_order_view
+    where releaser_id=#{hostId}
+    order by release_time desc
+    limit #{startIndex},#{pageSize}
+  </select>
+
+  <!--Create by Jason @2018/9/13-->
+  <update id="updateByKeyLimitVsn" parameterType="top.jianghuling.wechatapp.entity.Order">
+    update express_order
+    set goods_code = #{goodsCode,jdbcType=VARCHAR},
+      note = #{note,jdbcType=VARCHAR},
+      reward = #{reward,jdbcType=REAL},
+      host_name = #{hostName,jdbcType=VARCHAR},
+      take_address = #{takeAddress,jdbcType=VARCHAR},
+      destination = #{destination,jdbcType=VARCHAR},
+      goods_weight = #{goodsWeight,jdbcType=VARCHAR},
+      starttime = #{starttime,jdbcType=TIME},
+      deadline = #{deadline,jdbcType=TIME},
+      release_time = #{releaseTime,jdbcType=TIMESTAMP},
+      express_type = #{expressType,jdbcType=VARCHAR},
+      releaser_id = #{releaserId,jdbcType=VARCHAR},
+      host_phone = #{hostPhone,jdbcType=VARCHAR},
+      order_state = #{orderState,jdbcType=TINYINT},
+      version = version+1
+    where order_id = #{orderId,jdbcType=VARCHAR} and version = #{version,jdbcType=INTEGER}
+  </update>
 
 </mapper>

@@ -105,6 +105,76 @@ public class MissionExample {
             criteria.add(new Criterion(condition, value1, value2));
         }
 
+        public Criteria andMissionIdIsNull() {
+            addCriterion("mission_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMissionIdIsNotNull() {
+            addCriterion("mission_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMissionIdEqualTo(String value) {
+            addCriterion("mission_id =", value, "missionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMissionIdNotEqualTo(String value) {
+            addCriterion("mission_id <>", value, "missionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMissionIdGreaterThan(String value) {
+            addCriterion("mission_id >", value, "missionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMissionIdGreaterThanOrEqualTo(String value) {
+            addCriterion("mission_id >=", value, "missionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMissionIdLessThan(String value) {
+            addCriterion("mission_id <", value, "missionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMissionIdLessThanOrEqualTo(String value) {
+            addCriterion("mission_id <=", value, "missionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMissionIdLike(String value) {
+            addCriterion("mission_id like", value, "missionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMissionIdNotLike(String value) {
+            addCriterion("mission_id not like", value, "missionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMissionIdIn(List<String> values) {
+            addCriterion("mission_id in", values, "missionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMissionIdNotIn(List<String> values) {
+            addCriterion("mission_id not in", values, "missionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMissionIdBetween(String value1, String value2) {
+            addCriterion("mission_id between", value1, value2, "missionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMissionIdNotBetween(String value1, String value2) {
+            addCriterion("mission_id not between", value1, value2, "missionId");
+            return (Criteria) this;
+        }
+
         public Criteria andOrderIdIsNull() {
             addCriterion("order_id is null");
             return (Criteria) this;
@@ -422,6 +492,66 @@ public class MissionExample {
 
         public Criteria andFinishTimeNotBetween(Date value1, Date value2) {
             addCriterion("finish_time not between", value1, value2, "finishTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionIsNull() {
+            addCriterion("version is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionIsNotNull() {
+            addCriterion("version is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionEqualTo(Integer value) {
+            addCriterion("version =", value, "version");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionNotEqualTo(Integer value) {
+            addCriterion("version <>", value, "version");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionGreaterThan(Integer value) {
+            addCriterion("version >", value, "version");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionGreaterThanOrEqualTo(Integer value) {
+            addCriterion("version >=", value, "version");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionLessThan(Integer value) {
+            addCriterion("version <", value, "version");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionLessThanOrEqualTo(Integer value) {
+            addCriterion("version <=", value, "version");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionIn(List<Integer> values) {
+            addCriterion("version in", values, "version");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionNotIn(List<Integer> values) {
+            addCriterion("version not in", values, "version");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionBetween(Integer value1, Integer value2) {
+            addCriterion("version between", value1, value2, "version");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionNotBetween(Integer value1, Integer value2) {
+            addCriterion("version not between", value1, value2, "version");
             return (Criteria) this;
         }
     }

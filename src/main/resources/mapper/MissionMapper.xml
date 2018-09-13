@@ -2,6 +2,246 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="top.jianghuling.wechatapp.dao.MissionMapper">
   <resultMap id="BaseResultMap" type="top.jianghuling.wechatapp.entity.Mission">
+    <id column="mission_id" jdbcType="VARCHAR" property="missionId" />
+    <result column="order_id" jdbcType="VARCHAR" property="orderId" />
+    <result column="taker_id" jdbcType="VARCHAR" property="takerId" />
+    <result column="accept_time" jdbcType="TIMESTAMP" property="acceptTime" />
+    <result column="mission_state" jdbcType="TINYINT" property="missionState" />
+    <result column="finish_time" jdbcType="TIMESTAMP" property="finishTime" />
+    <result column="version" jdbcType="INTEGER" property="version" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    mission_id, order_id, taker_id, accept_time, mission_state, finish_time, version
+  </sql>
+  <select id="selectByExample" parameterType="top.jianghuling.wechatapp.entity.MissionExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from mission
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from mission
+    where mission_id = #{missionId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from mission
+    where mission_id = #{missionId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="top.jianghuling.wechatapp.entity.MissionExample">
+    delete from mission
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="top.jianghuling.wechatapp.entity.Mission">
+    insert into mission (mission_id, order_id, taker_id, 
+      accept_time, mission_state, finish_time, 
+      version)
+    values (#{missionId,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, #{takerId,jdbcType=VARCHAR}, 
+      #{acceptTime,jdbcType=TIMESTAMP}, #{missionState,jdbcType=TINYINT}, #{finishTime,jdbcType=TIMESTAMP}, 
+      #{version,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="top.jianghuling.wechatapp.entity.Mission">
+    insert into mission
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="missionId != null">
+        mission_id,
+      </if>
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="takerId != null">
+        taker_id,
+      </if>
+      <if test="acceptTime != null">
+        accept_time,
+      </if>
+      <if test="missionState != null">
+        mission_state,
+      </if>
+      <if test="finishTime != null">
+        finish_time,
+      </if>
+      <if test="version != null">
+        version,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="missionId != null">
+        #{missionId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null">
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="takerId != null">
+        #{takerId,jdbcType=VARCHAR},
+      </if>
+      <if test="acceptTime != null">
+        #{acceptTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="missionState != null">
+        #{missionState,jdbcType=TINYINT},
+      </if>
+      <if test="finishTime != null">
+        #{finishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="top.jianghuling.wechatapp.entity.MissionExample" resultType="java.lang.Long">
+    select count(*) from mission
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update mission
+    <set>
+      <if test="record.missionId != null">
+        mission_id = #{record.missionId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orderId != null">
+        order_id = #{record.orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.takerId != null">
+        taker_id = #{record.takerId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.acceptTime != null">
+        accept_time = #{record.acceptTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.missionState != null">
+        mission_state = #{record.missionState,jdbcType=TINYINT},
+      </if>
+      <if test="record.finishTime != null">
+        finish_time = #{record.finishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.version != null">
+        version = #{record.version,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update mission
+    set mission_id = #{record.missionId,jdbcType=VARCHAR},
+      order_id = #{record.orderId,jdbcType=VARCHAR},
+      taker_id = #{record.takerId,jdbcType=VARCHAR},
+      accept_time = #{record.acceptTime,jdbcType=TIMESTAMP},
+      mission_state = #{record.missionState,jdbcType=TINYINT},
+      finish_time = #{record.finishTime,jdbcType=TIMESTAMP},
+      version = #{record.version,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="top.jianghuling.wechatapp.entity.Mission">
+    update mission
+    <set>
+      <if test="orderId != null">
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="takerId != null">
+        taker_id = #{takerId,jdbcType=VARCHAR},
+      </if>
+      <if test="acceptTime != null">
+        accept_time = #{acceptTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="missionState != null">
+        mission_state = #{missionState,jdbcType=TINYINT},
+      </if>
+      <if test="finishTime != null">
+        finish_time = #{finishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="version != null">
+        version = #{version,jdbcType=INTEGER},
+      </if>
+    </set>
+    where mission_id = #{missionId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="top.jianghuling.wechatapp.entity.Mission">
+    update mission
+    set order_id = #{orderId,jdbcType=VARCHAR},
+      taker_id = #{takerId,jdbcType=VARCHAR},
+      accept_time = #{acceptTime,jdbcType=TIMESTAMP},
+      mission_state = #{missionState,jdbcType=TINYINT},
+      finish_time = #{finishTime,jdbcType=TIMESTAMP},
+      version = #{version,jdbcType=INTEGER}
+    where mission_id = #{missionId,jdbcType=VARCHAR}
+  </update>
+  <resultMap id="BaseResultMap" type="top.jianghuling.wechatapp.entity.Mission">
+    <id column="mission_id" jdbcType="VARCHAR" property="missionId" />
     <result column="order_id" jdbcType="VARCHAR" property="orderId" />
     <result column="taker_id" jdbcType="VARCHAR" property="takerId" />
     <result column="accept_time" jdbcType="TIMESTAMP" property="acceptTime" />
@@ -67,7 +307,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    order_id, taker_id, accept_time, mission_state, finish_time
+    mission_id, order_id, taker_id, accept_time, mission_state, finish_time
   </sql>
   <select id="selectByExample" parameterType="top.jianghuling.wechatapp.entity.MissionExample" resultMap="BaseResultMap">
     select
@@ -83,6 +323,16 @@
       order by ${orderByClause}
     </if>
   </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from mission
+    where mission_id = #{missionId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from mission
+    where mission_id = #{missionId,jdbcType=VARCHAR}
+  </delete>
   <delete id="deleteByExample" parameterType="top.jianghuling.wechatapp.entity.MissionExample">
     delete from mission
     <if test="_parameter != null">
@@ -90,14 +340,19 @@
     </if>
   </delete>
   <insert id="insert" parameterType="top.jianghuling.wechatapp.entity.Mission">
-    insert into mission (order_id, taker_id, accept_time, 
-      mission_state, finish_time)
-    values (#{orderId,jdbcType=VARCHAR}, #{takerId,jdbcType=VARCHAR}, #{acceptTime,jdbcType=TIMESTAMP}, 
-      #{missionState,jdbcType=TINYINT}, #{finishTime,jdbcType=TIMESTAMP})
+    insert into mission (mission_id, order_id, taker_id, 
+      accept_time, mission_state, finish_time
+      )
+    values (#{missionId,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, #{takerId,jdbcType=VARCHAR}, 
+      #{acceptTime,jdbcType=TIMESTAMP}, #{missionState,jdbcType=TINYINT}, #{finishTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="top.jianghuling.wechatapp.entity.Mission">
     insert into mission
     <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="missionId != null">
+        mission_id,
+      </if>
       <if test="orderId != null">
         order_id,
       </if>
@@ -115,6 +370,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="missionId != null">
+        #{missionId,jdbcType=VARCHAR},
+      </if>
       <if test="orderId != null">
         #{orderId,jdbcType=VARCHAR},
       </if>
@@ -141,6 +399,9 @@
   <update id="updateByExampleSelective" parameterType="map">
     update mission
     <set>
+      <if test="record.missionId != null">
+        mission_id = #{record.missionId,jdbcType=VARCHAR},
+      </if>
       <if test="record.orderId != null">
         order_id = #{record.orderId,jdbcType=VARCHAR},
       </if>
@@ -163,7 +424,8 @@
   </update>
   <update id="updateByExample" parameterType="map">
     update mission
-    set order_id = #{record.orderId,jdbcType=VARCHAR},
+    set mission_id = #{record.missionId,jdbcType=VARCHAR},
+      order_id = #{record.orderId,jdbcType=VARCHAR},
       taker_id = #{record.takerId,jdbcType=VARCHAR},
       accept_time = #{record.acceptTime,jdbcType=TIMESTAMP},
       mission_state = #{record.missionState,jdbcType=TINYINT},
@@ -172,12 +434,34 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-    <!--create by Jason 2018/9/10-->
-    <select id="findMissionByOrderId"  resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List" />
-        from mission
-        where order_id=#{orderId}
-
-    </select>
+  <update id="updateByPrimaryKeySelective" parameterType="top.jianghuling.wechatapp.entity.Mission">
+    update mission
+    <set>
+      <if test="orderId != null">
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="takerId != null">
+        taker_id = #{takerId,jdbcType=VARCHAR},
+      </if>
+      <if test="acceptTime != null">
+        accept_time = #{acceptTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="missionState != null">
+        mission_state = #{missionState,jdbcType=TINYINT},
+      </if>
+      <if test="finishTime != null">
+        finish_time = #{finishTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where mission_id = #{missionId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="top.jianghuling.wechatapp.entity.Mission">
+    update mission
+    set order_id = #{orderId,jdbcType=VARCHAR},
+      taker_id = #{takerId,jdbcType=VARCHAR},
+      accept_time = #{acceptTime,jdbcType=TIMESTAMP},
+      mission_state = #{missionState,jdbcType=TINYINT},
+      finish_time = #{finishTime,jdbcType=TIMESTAMP}
+    where mission_id = #{missionId,jdbcType=VARCHAR}
+  </update>
 </mapper>

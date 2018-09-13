@@ -3,6 +3,8 @@ package top.jianghuling.wechatapp.entity;
 import java.util.Date;
 
 public class Mission {
+    private String missionId;
+
     private String orderId;
 
     private String takerId;
@@ -12,6 +14,16 @@ public class Mission {
     private Byte missionState;
 
     private Date finishTime;
+
+    private Integer version;
+
+    public String getMissionId() {
+        return missionId;
+    }
+
+    public void setMissionId(String missionId) {
+        this.missionId = missionId == null ? null : missionId.trim();
+    }
 
     public String getOrderId() {
         return orderId;
@@ -51,5 +63,13 @@ public class Mission {
 
     public void setFinishTime(Date finishTime) {
         this.finishTime = finishTime;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 }
