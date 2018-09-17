@@ -10,6 +10,7 @@ import top.jianghuling.wechatapp.entity.OrderExample;
 import top.jianghuling.wechatapp.entity.OrderLinkMission;
 import top.jianghuling.wechatapp.results.BriefOrder;
 
+
 @Mapper
 @Repository
 public interface OrderMapper {
@@ -39,6 +40,8 @@ public interface OrderMapper {
     List<BriefOrder> selectBriefOrderByPage(@Param("startIndex")int startIndex, @Param("pageSize")int pageSize, @Param("orderState")int orderState);
     //created by Jason @2018/9/11
     List<OrderLinkMission> selectOrderMission(@Param("hostId")String hostId, @Param("startIndex")int startIndex, @Param("pageSize")int pageSize );
-
+    //created by Jason @2018/9/11
     int updateByKeyLimitVsn(Order record);
+
+    int updateStateLock(@Param("orderId") String orderId, @Param("newState") Byte newState,@Param("version")int version);
 }

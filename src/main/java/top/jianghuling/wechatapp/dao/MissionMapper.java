@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 import top.jianghuling.wechatapp.entity.Mission;
 import top.jianghuling.wechatapp.entity.MissionExample;
 
-@Repository
 @Mapper
+@Repository
 public interface MissionMapper {
     long countByExample(MissionExample example);
 
@@ -32,4 +32,7 @@ public interface MissionMapper {
     int updateByPrimaryKeySelective(Mission record);
 
     int updateByPrimaryKey(Mission record);
+
+    //create by Jason @2018/9/16
+    Mission selectByOrderId(String orderId);
 }

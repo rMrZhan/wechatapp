@@ -13,14 +13,23 @@ public class BriefOrder {
     private Date releaseTime;
     private String expressType;
     private String orderId;
-    private int version;
+    private Byte orderState;
+    private Date modifyTime;
 
-    public int getVersion() {
-        return version;
+    public Byte getOrderState() {
+        return orderState;
     }
 
-    public void setVersion(int version) {
-        this.version = version;
+    public void setOrderState(Byte orderState) {
+        this.orderState = orderState;
+    }
+
+    public Date getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(Date modifyTime) {
+        this.modifyTime = modifyTime;
     }
 
     public String getOrderId() {

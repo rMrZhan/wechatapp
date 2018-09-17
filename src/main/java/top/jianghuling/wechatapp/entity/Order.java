@@ -35,6 +35,8 @@ public class Order {
 
     private Integer version;
 
+    private Date modifyTime;
+
     public String getOrderId() {
         return orderId;
     }
@@ -161,5 +163,13 @@ public class Order {
 
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    public Date getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(Date modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

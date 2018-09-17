@@ -375,66 +375,6 @@ public class MissionExample {
             return (Criteria) this;
         }
 
-        public Criteria andMissionStateIsNull() {
-            addCriterion("mission_state is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andMissionStateIsNotNull() {
-            addCriterion("mission_state is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andMissionStateEqualTo(Byte value) {
-            addCriterion("mission_state =", value, "missionState");
-            return (Criteria) this;
-        }
-
-        public Criteria andMissionStateNotEqualTo(Byte value) {
-            addCriterion("mission_state <>", value, "missionState");
-            return (Criteria) this;
-        }
-
-        public Criteria andMissionStateGreaterThan(Byte value) {
-            addCriterion("mission_state >", value, "missionState");
-            return (Criteria) this;
-        }
-
-        public Criteria andMissionStateGreaterThanOrEqualTo(Byte value) {
-            addCriterion("mission_state >=", value, "missionState");
-            return (Criteria) this;
-        }
-
-        public Criteria andMissionStateLessThan(Byte value) {
-            addCriterion("mission_state <", value, "missionState");
-            return (Criteria) this;
-        }
-
-        public Criteria andMissionStateLessThanOrEqualTo(Byte value) {
-            addCriterion("mission_state <=", value, "missionState");
-            return (Criteria) this;
-        }
-
-        public Criteria andMissionStateIn(List<Byte> values) {
-            addCriterion("mission_state in", values, "missionState");
-            return (Criteria) this;
-        }
-
-        public Criteria andMissionStateNotIn(List<Byte> values) {
-            addCriterion("mission_state not in", values, "missionState");
-            return (Criteria) this;
-        }
-
-        public Criteria andMissionStateBetween(Byte value1, Byte value2) {
-            addCriterion("mission_state between", value1, value2, "missionState");
-            return (Criteria) this;
-        }
-
-        public Criteria andMissionStateNotBetween(Byte value1, Byte value2) {
-            addCriterion("mission_state not between", value1, value2, "missionState");
-            return (Criteria) this;
-        }
-
         public Criteria andFinishTimeIsNull() {
             addCriterion("finish_time is null");
             return (Criteria) this;
@@ -492,66 +432,6 @@ public class MissionExample {
 
         public Criteria andFinishTimeNotBetween(Date value1, Date value2) {
             addCriterion("finish_time not between", value1, value2, "finishTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andVersionIsNull() {
-            addCriterion("version is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andVersionIsNotNull() {
-            addCriterion("version is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andVersionEqualTo(Integer value) {
-            addCriterion("version =", value, "version");
-            return (Criteria) this;
-        }
-
-        public Criteria andVersionNotEqualTo(Integer value) {
-            addCriterion("version <>", value, "version");
-            return (Criteria) this;
-        }
-
-        public Criteria andVersionGreaterThan(Integer value) {
-            addCriterion("version >", value, "version");
-            return (Criteria) this;
-        }
-
-        public Criteria andVersionGreaterThanOrEqualTo(Integer value) {
-            addCriterion("version >=", value, "version");
-            return (Criteria) this;
-        }
-
-        public Criteria andVersionLessThan(Integer value) {
-            addCriterion("version <", value, "version");
-            return (Criteria) this;
-        }
-
-        public Criteria andVersionLessThanOrEqualTo(Integer value) {
-            addCriterion("version <=", value, "version");
-            return (Criteria) this;
-        }
-
-        public Criteria andVersionIn(List<Integer> values) {
-            addCriterion("version in", values, "version");
-            return (Criteria) this;
-        }
-
-        public Criteria andVersionNotIn(List<Integer> values) {
-            addCriterion("version not in", values, "version");
-            return (Criteria) this;
-        }
-
-        public Criteria andVersionBetween(Integer value1, Integer value2) {
-            addCriterion("version between", value1, value2, "version");
-            return (Criteria) this;
-        }
-
-        public Criteria andVersionNotBetween(Integer value1, Integer value2) {
-            addCriterion("version not between", value1, value2, "version");
             return (Criteria) this;
         }
     }

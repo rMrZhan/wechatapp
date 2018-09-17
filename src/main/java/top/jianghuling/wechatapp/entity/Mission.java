@@ -11,11 +11,7 @@ public class Mission {
 
     private Date acceptTime;
 
-    private Byte missionState;
-
     private Date finishTime;
-
-    private Integer version;
 
     public String getMissionId() {
         return missionId;
@@ -49,27 +45,11 @@ public class Mission {
         this.acceptTime = acceptTime;
     }
 
-    public Byte getMissionState() {
-        return missionState;
-    }
-
-    public void setMissionState(Byte missionState) {
-        this.missionState = missionState;
-    }
-
     public Date getFinishTime() {
         return finishTime;
     }
 
     public void setFinishTime(Date finishTime) {
         this.finishTime = finishTime;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
     }
 }
