@@ -423,8 +423,8 @@
         select
         <include refid="Brief_Order_List"/>
         from express_order
-        limit #{startIndex},#{pageSize}
         where order_state=#{orderState}
+        limit #{startIndex},#{pageSize}
     </select>
 
     <!--created by jason @2018/9/11-->
@@ -486,9 +486,9 @@
     <update id="updateStateLock">
         update
         express_order
-        set order_state=#{newState}
-        version = version+1
+        set order_state=#{newState},
+        version = version+1,
         modify_time=now()
-        where order_id = #{order_id} and version =#{version, jdbcType=INTEGER}
+        where order_id = #{orderId} and version =#{version}
     </update>
 </mapper>

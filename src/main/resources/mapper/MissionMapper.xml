@@ -214,6 +214,6 @@
         select
         <include refid="Base_Column_List" />
         from mission
-        where order_id=#{order_id} and mission_state=${Constants.MissionState.MISSION_ONGOING}
+        where order_id=#{orderId}
     </select>
 </mapper>

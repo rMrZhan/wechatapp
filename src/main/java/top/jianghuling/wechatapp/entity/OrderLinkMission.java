@@ -5,6 +5,16 @@ import java.util.Date;
 public class OrderLinkMission {
     private String orderId;
 
+    private String takerId;
+
+    public String getTakerId() {
+        return takerId;
+    }
+
+    public void setTakerId(String takerId) {
+        this.takerId = takerId;
+    }
+
     private String goodsCode;
 
     private String note;

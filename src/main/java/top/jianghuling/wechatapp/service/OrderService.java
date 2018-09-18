@@ -19,14 +19,6 @@ import java.util.UUID;
 @Service
 public class OrderService {
 
-    @Value("${Constants.MissionState.MISSION_SUCCESS}")
-    private Byte MISSION_SUCCESS;
-    @Value("${Constants.MissionState.MISSION_FAIL}")
-    private Byte MISSION_FAIL;
-    @Value("${Constants.MissionState.MISSION_ONGOING}")
-    private Byte MISSION_ONGOING;
-    @Value("${Constants.MissionState.MISSION_CANCEL}")
-    private Byte MISSION_CANCLE;
     @Value("${Constants.OrderState.ORDER_INAIR}")
     private Byte ORDER_INAIR;//订单刚刚发布
     @Value("${Constants.OrderState.ORDER_SUCCESS}")
@@ -59,15 +51,15 @@ public class OrderService {
      *  ModifyDate: 2018/9/15
      * Description: 发布订单
      * Concurrency：无
-     * Test：
+     * Test：成功
      * @author  Jason
      */
     @Transactional
-    public boolean releaseNewOrder(String releaserId,String goodsCode, String note, float reward, String hostName, String hostPhone,
+    public int releaseNewOrder(String releaserId,String goodsCode, String note, float reward, String hostName, String hostPhone,
                                String takeAddress, String destination, String goodsWeight,
                                Date starttime, Date deadline,String expressType){
         try{
-            String orderId = UUID.randomUUID().toString();
+            String orderId = UUID.randomUUID().toString().replace('-','0');
 
                 Order order = new Order();
 
@@ -90,10 +82,10 @@ public class OrderService {
                 Timestamp releaseTime = new Timestamp(date.getTime());
                 order.setReleaseTime(releaseTime);
                 orderMapper.insert(order);
-                return true;
+                return OPERATE_SUCCESS;
 
         }catch (Exception e){
-            return false;
+            return OPERATE_FAIL;
         }
     }
 
@@ -103,7 +95,7 @@ public class OrderService {
      * Description: 接受订单（任务）
      * Concurrency：①用户发布订单之前就被接单了
      *              ②多用户同时发送了下单请求到服务器，出现竞争问题
-     * Test：
+     * Test：成功
      * @author  Jason
      */
     @Transactional
@@ -113,7 +105,7 @@ public class OrderService {
         Timestamp acceptTime = new Timestamp(date.getTime());
 
         Mission mission = new Mission();
-        mission.setMissionId(UUID.randomUUID().toString());
+        mission.setMissionId(UUID.randomUUID().toString().replace('-','0'));
         mission.setAcceptTime(acceptTime);
         mission.setOrderId(orderId);
         mission.setTakerId(takerId);
@@ -123,13 +115,16 @@ public class OrderService {
             return ORDER_RELEASER_CANCEL;
         } else if (acceptOrder.getOrderState() == ORDER_ONGOING) {//订单被其他人抢到
             return ORDER_ONGOING;
-        } else {
+        } else if(acceptOrder.getOrderState()==ORDER_INAIR){
             if (orderMapper.updateStateLock(orderId, ORDER_ONGOING, acceptOrder.getVersion()) != 0) {//第二遍筛选，活锁，检查version
                 missionMapper.insert(mission);
                 return OPERATE_SUCCESS;
             } else {
                 return ORDER_ONGOING;//在一瞬间被别人抢到;
             }
+        }
+        else {
+            return OPERATE_FAIL;//可能被别人完成了
         }
     }
 
@@ -141,7 +136,7 @@ public class OrderService {
      * Concurrency：①发单人取消订单的的瞬间之前被接单了
      *              ②发布者要取消已经被接单的单子却被在瞬间之前被接单人放弃任务了
      *              ③如果接单人已经把快递送达，发单人却要取消单子：在用户点取消订单的时候查一下订单是否被接单的人确认完成工作
-     * Test：
+     * Test：成功
      * @author  Jason
      */
     @Transactional
@@ -173,7 +168,7 @@ public class OrderService {
     public int cancelOrderByHost(String orderId){
         Date date = new Date();
         if(orderMapper.updateStateLock(orderId,ORDER_RELEASER_CANCEL,orderMapper.selectByPrimaryKey(orderId).getVersion())!=0){
-            Mission mission = missionMapper.selectByOrderId(orderId);
+            Mission mission = missionMapper.selectByOrderId(orderId,ORDER_ONGOING);
             mission.setFinishTime(new Timestamp(date.getTime()));
             missionMapper.updateByPrimaryKeySelective(mission);
             return OPERATE_SUCCESS;
@@ -213,7 +208,7 @@ public class OrderService {
      * Condition：
      * Concurrency：①确认任务成功的前一刻，收件人放弃订单
      *
-     * Test：
+     * Test：成功
      * @author  Jason
      */
     @Transactional
@@ -239,7 +234,7 @@ public class OrderService {
      * Description：任务失败,
      * Condition：
      * Concurrency：
-     * Test：
+     * Test：成功
      * @author  Jason
      */
     @Transactional
@@ -251,8 +246,7 @@ public class OrderService {
     /**
      * ModifyDate: 2018/9/17 23:29
      * Description: 浏览未接单的任务
-     * Test:
-     *
+     * Test: 成功
      * @author Jason
     * */
     @Transactional
@@ -264,7 +258,7 @@ public class OrderService {
     /**
      * ModifyDate: 2018/9/17 23:29
      * Description: 浏览我接单的任务（包括历史任务，正在进行，放弃的任务）
-     * Test:
+     * Test: 成功
      * @author Jason
      * */
     @Transactional
@@ -282,16 +276,22 @@ public class OrderService {
         OrderExample.Criteria oeCriteria = oe.createCriteria();
         oeCriteria.andOrderIdIn(orderIds);
         oe.setOrderByClause("release_time desc");
-       return orderMapper.selectByExample(oe).subList(pageNum*pageSize,pageSize);
+        int pageStartIndex = pageNum*pageSize;
+        int pageBound = pageNum*pageStartIndex+pageSize;
+        List<Order> orders =orderMapper.selectByExample(oe);
+        if(pageBound<orders.size())
+            return orders.subList(pageStartIndex,pageSize);
+        else if(pageStartIndex<orders.size()&&pageBound>orders.size())
+            return  orders.subList(pageStartIndex,orders.size()-1);
+        else return new ArrayList<Order>();
 
     }
-
 
 
     /**
      * ModifyDate: 2018/9/17 23:46
      * Description: 浏览我发布的
-     * Test:
+     * Test: 成功
      * @author Jason
      * */
     @Transactional
@@ -301,12 +301,29 @@ public class OrderService {
 
 
     /**
-     * Description: 送件人拿到快递之后确认送达，三天之内，如果收件人对订单没有认证任务失败的操作，则完成交易。收件人也可以主动确认收件，完成交易
-     *
+     * Date: 2018/9/18 8:43
+     * Description: 送件人拿到快递之后确认送达，两天之内，如果收件人对订单没有认证任务失败的操作，则完成交易。
+     *              收件人也可以主动确认收件，完成交易
+     * Concurrency: 前一秒钟①被确认完成任务②被取消订单④认定任务失败
+     * Test: 成功
+     * @author Jason
      * */
     @Transactional
-    public void confirmFinishMission(String orderId){
-        orderMapper.selectByPrimaryKey(orderId).setOrderState(ORDER_CONFIRM_FINISH);
+    public int confirmFinishMission(String orderId){
+       Order targetOrder =  orderMapper.selectByPrimaryKey(orderId);
+        Byte orderState = targetOrder.getOrderState();
+        if(orderState==ORDER_SUCCESS){
+            return ORDER_SUCCESS;
+        }else if(orderState==ORDER_RELEASER_CANCEL){
+            return ORDER_RELEASER_CANCEL;
+        }else if(orderState == ORDER_FAIL){
+            return ORDER_FAIL;
+        }else{
+            if(orderMapper.updateStateLock(orderId,ORDER_CONFIRM_FINISH,targetOrder.getVersion())!=1){
+                return OPERATE_SUCCESS;
+            }else return OPERATE_FAIL;
+        }
+
     }
 
 }

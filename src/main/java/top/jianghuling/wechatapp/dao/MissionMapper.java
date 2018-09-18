@@ -34,5 +34,5 @@ public interface MissionMapper {
     int updateByPrimaryKey(Mission record);
 
     //create by Jason @2018/9/16
-    Mission selectByOrderId(String orderId);
+    Mission selectByOrderId(@Param("orderId") String orderId,@Param("orderState")int orderState);
 }
