@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import top.jianghuling.wechatapp.dao.RedisDao;
-
+import top.jianghuling.wechatapp.results.ResultMessage;
 
 
 @Component
@@ -73,6 +73,11 @@ public class Verify {
             return false;
         }
         return false;
+    }
+
+
+    public boolean verifyPhone(String phone,String vCode){
+        return redisDao.get(phone)==vCode;
     }
 
 }

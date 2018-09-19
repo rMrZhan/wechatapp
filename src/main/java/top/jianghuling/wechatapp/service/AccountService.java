@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.jianghuling.wechatapp.dao.RedisDao;
+import top.jianghuling.wechatapp.dao.UserInfoMapper;
+import top.jianghuling.wechatapp.entity.UserInfo;
+import top.jianghuling.wechatapp.results.LoginState;
 import top.jianghuling.wechatapp.results.ResultMessage;
 import top.jianghuling.wechatapp.utils.SecurityUtil;
 import top.jianghuling.wechatapp.utils.Verify;
@@ -19,8 +22,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.sql.Timestamp;
-import java.util.Date;
 
 
 @Service
@@ -42,43 +43,61 @@ public class AccountService {
     private String secret;
     @Value("${Constants.WeChatLogin.Redis_3SK_ExpireTime}")
     private long redis3SKExpireTime;
-
+    @Value("${Constants.Operate.SUCCESS}")
+    private Byte OPERATE_SUCCESS;
+    @Value("${Constants.Operate.FAIL}")
+    private Byte OPERATE_FAIL;
+    @Value("${Constants.LoginState.FULL}")
+    private int FULL;
+    @Value("${Constants.LoginState.LACK_PHONE}")
+    private int LACK_PHONE;
+    @Value("${Constants.LoginState.LACK_STUID}")
+    private int LACK_STUID;
+    @Value("${Constants.LoginState.LACK_BOTH}")
+    private int LACK_BOTH;
 
     @Autowired
     private Verify verify;
     @Autowired
     private RedisDao redisDao;
+    @Autowired
+    private UserInfoMapper userInfoMapper;
 
-//    /**获取验证码的同时将手机号对应的验证码和时间插入到数据库**/
-//    @Transactional
-//    public void getMessageCode(String phoneNumber){
-//        try {
-//            String verifyCode = String.valueOf((int)((Math.random()*9+1)*1000));
-//            String[] params = {verifyCode,codeInvalidTime};
-//            SmsSingleSender ssender = new SmsSingleSender(SMSAppid, SMSAppkey);
-//            SmsSingleSenderResult result = ssender.sendWithParam("86", phoneNumber,
-//                    SMSTemplateId, params, SMSSign, "", "");  // 签名参数未提供或者为空时，会使用默认签名发送短信
-//
-//            System.out.println(result);
-//            SmsCode smsCode = new SmsCode();
-//            smsCode.setPhone(phoneNumber);
-//            smsCode.setCode(verifyCode);
-//            Date date = new Date();
-//            Timestamp timeStamp = new Timestamp(date.getTime());
-//            smsCode.setCreateTime(timeStamp);
-//            smsCodeMapper.insert(smsCode);
-//        } catch (HTTPException e) {
-//            // HTTP响应码错误
-//            e.printStackTrace();
-//        } catch (JSONException e) {
-//            // json解析错误
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            // 网络IO错误
-//            e.printStackTrace();
-//        }
-//    }
+    /**获取验证码的同时将手机号对应的验证码和时间插入到redis**/
+    @Transactional
+    public ResultMessage getMessageCode(String phoneNumber){
+        try {
+            String verifyCode = String.valueOf((int)((Math.random()*9+1)*1000));
+            String[] params = {verifyCode,codeInvalidTime};
+            SmsSingleSender ssender = new SmsSingleSender(SMSAppid, SMSAppkey);
+            SmsSingleSenderResult result = ssender.sendWithParam("86", phoneNumber,
+                    SMSTemplateId, params, SMSSign, "", "");  // 签名参数未提供或者为空时，会使用默认签名发送短信
 
+            if (result.result==0){
+                redisDao.set(phoneNumber,verifyCode,1800);
+                return new ResultMessage(OPERATE_SUCCESS,"发送验证码成功");
+            }else{
+                return new ResultMessage(OPERATE_FAIL,"发送验证码失败");
+            }
+
+        } catch (HTTPException e) {
+            // HTTP响应码错误
+            e.printStackTrace();
+        } catch (JSONException e) {
+            // json解析错误
+            e.printStackTrace();
+        } catch (IOException e) {
+            // 网络IO错误
+            e.printStackTrace();
+        }
+        return new ResultMessage(OPERATE_FAIL,"发送验证码失败");
+    }
+
+    /**
+     * 用户打开小程序下后执行login获取唯一id以及手机号，学生账号
+     * 下单前，检查账户信息是否完善，检查缓存中的账户状态，如果缺某一项则继续执行login
+     * 如果没有手机号或者学生号，提醒用户绑定。
+     */
 
     @Transactional
     public ResultMessage login(String jsCode){
@@ -88,12 +107,52 @@ public class AccountService {
             String sessionKey = jsonObject.getString("session_key");
             String thirdSessionId = SecurityUtil.md5(sessionKey);
             redisDao.set(thirdSessionId,openid,redis3SKExpireTime);//相同的key会覆写
-            return new ResultMessage(ResultMessage.SUCCESS,thirdSessionId);
+            UserInfo userInfo = userInfoMapper.selectByPrimaryKey(openid);
+            if(userInfo==null){ //新用户第一次登录
+                userInfo.setUserId(openid);
+                userInfoMapper.insert(userInfo);
+                return new ResultMessage(LACK_BOTH,thirdSessionId);
+            }else{
+                if(userInfo.getPhone()==null&&userInfo.getStuId()==null){
+                    return new ResultMessage(LACK_BOTH,thirdSessionId);
+                }else if(userInfo.getPhone()==null){
+                    return new ResultMessage(LACK_PHONE,thirdSessionId);
+                }else if(userInfo.getStuId()==null){
+                    return new ResultMessage(LACK_STUID,thirdSessionId);
+                }else{
+                    return new ResultMessage(FULL,thirdSessionId);
+                }
+            }
+
         }catch (Exception e){
-            return new ResultMessage(ResultMessage.FAIL,"微信服务器异常");
+            return new ResultMessage(OPERATE_FAIL,"微信服务器异常,请重新登录");
         }
 
     }
+    @Transactional
+    public ResultMessage bondStuId(String userId,String stuId, String stuPsd){
+        UserInfo user = userInfoMapper.selectByPrimaryKey(userId);
+        if(verify.verifyStuId(stuId,stuPsd)) {
+            user.setStuId(stuId);
+            user.setStuPassword(stuPsd);
+            userInfoMapper.updateByPrimaryKey(user);
+            return new ResultMessage(OPERATE_SUCCESS,"成功绑定学号");
+        }
+
+        else return new ResultMessage(OPERATE_FAIL,"绑定学号失败");
+    }
+    @Transactional
+    public ResultMessage bondPhone(String userId,String phone,String vCode){
+        UserInfo user = userInfoMapper.selectByPrimaryKey(userId);
+        if(verify.verifyPhone(phone,vCode)){
+            user.setPhone(phone);
+            return new ResultMessage(OPERATE_SUCCESS,"成功绑定手机");
+        }else
+        return new ResultMessage(OPERATE_FAIL,"验证码或手机号错误");
+
+    }
+
+
 
     public String getOpenidAndSessionKey(String resCode) throws Exception{
         String result = "";

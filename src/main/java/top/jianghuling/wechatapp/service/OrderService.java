@@ -1,5 +1,6 @@
 package top.jianghuling.wechatapp.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,8 @@ public class OrderService {
     private Byte OPERATE_SUCCESS;
     @Value("${Constants.Operate.FAIL}")
     private Byte OPERATE_FAIL;
+
+
 
     private final int initOrderVsn = 0;
 
@@ -263,6 +266,7 @@ public class OrderService {
      * */
     @Transactional
     public List<Order> browseMyMissionRecords(String takerId, int pageNum, int pageSize){
+
         MissionExample me = new MissionExample();
         MissionExample.Criteria meCriteria= me.createCriteria();
         meCriteria.andTakerIdEqualTo(takerId);

@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.factory.annotation.Value;
 
 public class ResultMessage {
-    @JsonIgnore
-    public static final int SUCCESS = 1;
-    @JsonIgnore
-    public static final int FAIL = 0;
+
 
     @JsonIgnore
     @Value("${Constants.OrderState.ORDER_INAIR}")
@@ -44,6 +41,9 @@ public class ResultMessage {
     public ResultMessage(int resultCode, String resultMessage){
         this.code = resultCode;
         this.message=resultMessage;
+    }
+    public ResultMessage(){
+
     }
     public ResultMessage(int resultCode){
         if(resultCode==ORDER_ABANDON)
