@@ -417,7 +417,7 @@
     </resultMap>
     <sql id="Brief_Order_List">
     order_id, note, reward, take_address, destination, goods_weight,
-    starttime, deadline, release_time, express_type,order_state,modify_time
+    starttime, deadline, release_time, express_type
   </sql>
     <select id="selectBriefOrderByPage" resultMap="BriefOrderMap">
         select
@@ -441,16 +441,14 @@
         <result column="deadline" jdbcType="TIME" property="deadline" />
         <result column="release_time" jdbcType="TIMESTAMP" property="releaseTime" />
         <result column="express_type" jdbcType="VARCHAR" property="expressType" />
-        <result column="releaser_id" jdbcType="VARCHAR" property="releaserId" />
         <result column="host_phone" jdbcType="VARCHAR" property="hostPhone" />
         <result column="order_state" jdbcType="TINYINT" property="orderState" />
         <result column="taker_phone" jdbcType="VARCHAR" property="takerPhone" />
-        <result column="taker_id"  jdbcType="VARCHAR" property="takerId" />
     </resultMap>
     <sql id="Order_Mission">
     order_id, goods_code, note, reward, host_name, take_address, destination, goods_weight,
-    starttime, deadline, release_time, express_type, releaser_id, host_phone, order_state,
-    taker_phone,taker_id
+    starttime, deadline, release_time, express_type, host_phone, order_state,
+    taker_phone
   </sql>
     <select id="selectOrderMission" resultMap="OrderLinkMission">
         select

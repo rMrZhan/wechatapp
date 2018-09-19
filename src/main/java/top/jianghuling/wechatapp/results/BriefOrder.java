@@ -5,32 +5,15 @@ import java.util.Date;
 public class BriefOrder {
     private Date starttime;
     private Date deadline;
-    private String destination;
-    private String note;
-    private String takeAddress;
+    private String destination;//送达地点
+    private String note;//备注
+    private String takeAddress;//取货地点
     private String goodsWeight;
     private float reward;
-    private Date releaseTime;
-    private String expressType;
+    private Date releaseTime;//发布时间
+    private String expressType;//快递品牌
     private String orderId;
-    private Byte orderState;
-    private Date modifyTime;
 
-    public Byte getOrderState() {
-        return orderState;
-    }
-
-    public void setOrderState(Byte orderState) {
-        this.orderState = orderState;
-    }
-
-    public Date getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(Date modifyTime) {
-        this.modifyTime = modifyTime;
-    }
 
     public String getOrderId() {
         return orderId;

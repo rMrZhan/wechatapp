@@ -39,7 +39,11 @@ public class OrderController {
     public List<Order> browseMyMissionRecords(String secretId, int pageNum, int pageSize){
         String takerId = SecurityUtil.getUserId(secretId);
         if(takerId==null) return null;
-        return orderService.browseMyMissionRecords(takerId,pageNum,pageSize);
+        List <Order> orders = orderService.browseMyMissionRecords(takerId,pageNum,pageSize);
+        for(Order o: orders){
+            o.setReleaserId("");
+        }
+        return orders;
     }
 
     @RequestMapping(value="lookmo")

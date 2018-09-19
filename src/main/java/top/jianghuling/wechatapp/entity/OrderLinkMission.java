@@ -4,17 +4,6 @@ import java.util.Date;
 
 public class OrderLinkMission {
     private String orderId;
-
-    private String takerId;
-
-    public String getTakerId() {
-        return takerId;
-    }
-
-    public void setTakerId(String takerId) {
-        this.takerId = takerId;
-    }
-
     private String goodsCode;
 
     private String note;
@@ -38,8 +27,6 @@ public class OrderLinkMission {
     private Date releaseTime;
 
     private String expressType;
-
-    private String releaserId;
 
     private String hostPhone;
 
@@ -161,13 +148,6 @@ public class OrderLinkMission {
         this.expressType = expressType;
     }
 
-    public String getReleaserId() {
-        return releaserId;
-    }
-
-    public void setReleaserId(String releaserId) {
-        this.releaserId = releaserId;
-    }
 
     public String getHostPhone() {
         return hostPhone;
