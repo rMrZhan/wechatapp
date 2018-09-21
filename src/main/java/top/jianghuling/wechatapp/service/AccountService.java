@@ -101,14 +101,17 @@ public class AccountService {
 
     @Transactional
     public ResultMessage login(String jsCode){
+        String result="";
         try{
-            JSONObject jsonObject = JSON.parseObject(getOpenidAndSessionKey(jsCode));
+            result = getOpenidAndSessionKey(jsCode);
+            JSONObject jsonObject = JSON.parseObject(result);
             String openid = jsonObject.getString("openid");
             String sessionKey = jsonObject.getString("session_key");
             String thirdSessionId = SecurityUtil.md5(sessionKey);
             redisDao.set(thirdSessionId,openid,redis3SKExpireTime);//相同的key会覆写
             UserInfo userInfo = userInfoMapper.selectByPrimaryKey(openid);
             if(userInfo==null){ //新用户第一次登录
+                userInfo = new UserInfo();
                 userInfo.setUserId(openid);
                 userInfoMapper.insert(userInfo);
                 return new ResultMessage(LACK_BOTH,thirdSessionId);
@@ -125,6 +128,7 @@ public class AccountService {
             }
 
         }catch (Exception e){
+
             return new ResultMessage(OPERATE_FAIL,"微信服务器异常,请重新登录");
         }
 
@@ -164,7 +168,6 @@ public class AccountService {
             URL url = new URL(urlNameString);
             URLConnection connection = url.openConnection();
             // 设置通用的请求属性
-
             connection.setRequestProperty("accept", "*/*");
             connection.setRequestProperty("connection", "Keep-Alive");
             connection.setRequestProperty("user-agent",

@@ -14,7 +14,6 @@ public class BriefOrder {
     private String expressType;//快递品牌
     private String orderId;
 
-
     public String getOrderId() {
         return orderId;
     }

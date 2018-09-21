@@ -169,11 +169,11 @@ public class OrderService {
      */
     @Transactional
     public int cancelOrderByHost(String orderId){
-        Date date = new Date();
+//        Date date = new Date();
         if(orderMapper.updateStateLock(orderId,ORDER_RELEASER_CANCEL,orderMapper.selectByPrimaryKey(orderId).getVersion())!=0){
-            Mission mission = missionMapper.selectByOrderId(orderId,ORDER_ONGOING);
-            mission.setFinishTime(new Timestamp(date.getTime()));
-            missionMapper.updateByPrimaryKeySelective(mission);
+//            Mission mission = missionMapper.selectByOrderId(orderId,ORDER_ONGOING);
+//            mission.setFinishTime(new Timestamp(date.getTime()));
+//            missionMapper.updateByPrimaryKeySelective(mission);
             return OPERATE_SUCCESS;
         }else return OPERATE_FAIL;//出现并发，让用户刷新
 
@@ -314,6 +314,7 @@ public class OrderService {
      * */
     @Transactional
     public int confirmFinishMission(String orderId){
+        Date date = new Date();
        Order targetOrder =  orderMapper.selectByPrimaryKey(orderId);
         Byte orderState = targetOrder.getOrderState();
         if(orderState==ORDER_SUCCESS){
@@ -324,6 +325,9 @@ public class OrderService {
             return ORDER_FAIL;
         }else{
             if(orderMapper.updateStateLock(orderId,ORDER_CONFIRM_FINISH,targetOrder.getVersion())!=1){
+                Mission mission = missionMapper.selectByOrderId(orderId,ORDER_ONGOING);
+                mission.setFinishTime(new Timestamp(date.getTime()));
+                missionMapper.updateByPrimaryKeySelective(mission);
                 return OPERATE_SUCCESS;
             }else return OPERATE_FAIL;
         }

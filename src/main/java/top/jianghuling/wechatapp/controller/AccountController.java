@@ -47,7 +47,7 @@ public class AccountController {
     public ResultMessage bondStuId(String secretId,String stuId,String stuPsd){
         String userId = SecurityUtil.getUserId(secretId);
         if(userId==null) return new ResultMessage(EXPIRE,"身份验证过期，请重新登录");
-        return accountService.bondPhone(userId,stuId,stuPsd);
+        return accountService.bondStuId(userId,stuId,stuPsd);
     }
 
 
