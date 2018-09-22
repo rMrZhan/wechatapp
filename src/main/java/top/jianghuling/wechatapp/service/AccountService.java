@@ -11,8 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.jianghuling.wechatapp.dao.RedisDao;
 import top.jianghuling.wechatapp.dao.UserInfoMapper;
-import top.jianghuling.wechatapp.entity.UserInfo;
-import top.jianghuling.wechatapp.results.LoginState;
+import top.jianghuling.wechatapp.model.UserInfo;
 import top.jianghuling.wechatapp.results.ResultMessage;
 import top.jianghuling.wechatapp.utils.SecurityUtil;
 import top.jianghuling.wechatapp.utils.Verify;
@@ -150,6 +149,7 @@ public class AccountService {
         UserInfo user = userInfoMapper.selectByPrimaryKey(userId);
         if(verify.verifyPhone(phone,vCode)){
             user.setPhone(phone);
+            userInfoMapper.updateByPrimaryKey(user);
             return new ResultMessage(OPERATE_SUCCESS,"成功绑定手机");
         }else
         return new ResultMessage(OPERATE_FAIL,"验证码或手机号错误");

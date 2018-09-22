@@ -3,13 +3,12 @@ package top.jianghuling.wechatapp.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import top.jianghuling.wechatapp.entity.Order;
-import top.jianghuling.wechatapp.entity.OrderLinkMission;
-import top.jianghuling.wechatapp.results.BriefOrder;
+import top.jianghuling.wechatapp.model.Order;
+import top.jianghuling.wechatapp.model.OrderLinkMission;
+import top.jianghuling.wechatapp.model.BriefOrder;
 import top.jianghuling.wechatapp.results.ResultMessage;
 import top.jianghuling.wechatapp.service.OrderService;
 import top.jianghuling.wechatapp.utils.MyTimeUtil;
@@ -108,6 +107,7 @@ public class OrderController {
                                          String starttime, String deadline, String expressType ){
         try{
             String releaserId = SecurityUtil.getUserId(secretId);
+            System.out.println("releaserId是：："+releaserId);
             if(releaserId==null) return new ResultMessage(EXPIRE,"身份验证过期，请重新登录");
             return new ResultMessage(orderService.releaseNewOrder( releaserId,  goodsCode,  note,  Float.parseFloat(reward),  hostName,  hostPhone,
                     takeAddress,  destination,  goodsWeight,

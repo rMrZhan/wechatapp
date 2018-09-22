@@ -1,15 +1,13 @@
 package top.jianghuling.wechatapp.service;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import top.jianghuling.wechatapp.dao.MissionMapper;
 import top.jianghuling.wechatapp.dao.OrderMapper;
-import top.jianghuling.wechatapp.entity.*;
-import top.jianghuling.wechatapp.results.BriefOrder;
+import top.jianghuling.wechatapp.model.*;
+import top.jianghuling.wechatapp.model.BriefOrder;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;

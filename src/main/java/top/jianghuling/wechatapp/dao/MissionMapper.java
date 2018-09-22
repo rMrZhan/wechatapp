@@ -5,8 +5,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
-import top.jianghuling.wechatapp.entity.Mission;
-import top.jianghuling.wechatapp.entity.MissionExample;
+import top.jianghuling.wechatapp.model.Mission;
+import top.jianghuling.wechatapp.model.MissionExample;
 
 @Mapper
 @Repository

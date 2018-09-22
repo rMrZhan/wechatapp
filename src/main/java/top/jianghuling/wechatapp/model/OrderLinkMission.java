@@ -1,8 +1,14 @@
-package top.jianghuling.wechatapp.entity;
+package top.jianghuling.wechatapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class OrderLinkMission {
+
+    @JsonIgnore
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private String orderId;
     private String goodsCode;
 
@@ -19,11 +25,11 @@ public class OrderLinkMission {
     private String destination;
 
     private String goodsWeight;
-
+    @JsonIgnore
     private Date starttime;
-
+    @JsonIgnore
     private Date deadline;
-
+    @JsonIgnore
     private Date releaseTime;
 
     private String expressType;
@@ -32,9 +38,16 @@ public class OrderLinkMission {
 
     private Byte orderState;
 
+    @JsonIgnore
     private Date finishTime;
 
     private String missionId;
+
+
+    private String tRelease;
+    private String tStart;
+    private String tEnd;
+    private String tFinish;
 
     public String getMissionId() {
         return missionId;
@@ -121,6 +134,7 @@ public class OrderLinkMission {
     }
 
     public void setStarttime(Date starttime) {
+        tStart = sdf.format(starttime);
         this.starttime = starttime;
     }
 
@@ -129,6 +143,7 @@ public class OrderLinkMission {
     }
 
     public void setDeadline(Date deadline) {
+        tEnd = sdf.format(deadline);
         this.deadline = deadline;
     }
 
@@ -137,6 +152,7 @@ public class OrderLinkMission {
     }
 
     public void setReleaseTime(Date releaseTime) {
+        tRelease =sdf.format(releaseTime);
         this.releaseTime = releaseTime;
     }
 
@@ -166,10 +182,12 @@ public class OrderLinkMission {
     }
 
     public Date getFinishTime() {
+
         return finishTime;
     }
 
     public void setFinishTime(Date finishTime) {
+        tFinish = sdf.format(finishTime);
         this.finishTime = finishTime;
     }
 }

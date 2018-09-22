@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="top.jianghuling.wechatapp.dao.OrderMapper">
-  <resultMap id="BaseResultMap" type="top.jianghuling.wechatapp.entity.Order">
+  <resultMap id="BaseResultMap" type="top.jianghuling.wechatapp.model.Order">
     <id column="order_id" jdbcType="VARCHAR" property="orderId" />
     <result column="goods_code" jdbcType="VARCHAR" property="goodsCode" />
     <result column="note" jdbcType="VARCHAR" property="note" />
@@ -83,7 +83,7 @@
     starttime, deadline, release_time, express_type, releaser_id, host_phone, order_state, 
     version, modify_time
   </sql>
-  <select id="selectByExample" parameterType="top.jianghuling.wechatapp.entity.OrderExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="top.jianghuling.wechatapp.model.OrderExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -107,13 +107,13 @@
     delete from express_order
     where order_id = #{orderId,jdbcType=VARCHAR}
   </delete>
-  <delete id="deleteByExample" parameterType="top.jianghuling.wechatapp.entity.OrderExample">
+  <delete id="deleteByExample" parameterType="top.jianghuling.wechatapp.model.OrderExample">
     delete from express_order
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="top.jianghuling.wechatapp.entity.Order">
+  <insert id="insert" parameterType="top.jianghuling.wechatapp.model.Order">
     insert into express_order (order_id, goods_code, note, 
       reward, host_name, take_address, 
       destination, goods_weight, starttime, 
@@ -127,7 +127,7 @@
       #{releaserId,jdbcType=VARCHAR}, #{hostPhone,jdbcType=VARCHAR}, #{orderState,jdbcType=TINYINT}, 
       #{version,jdbcType=INTEGER}, #{modifyTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="top.jianghuling.wechatapp.entity.Order">
+  <insert id="insertSelective" parameterType="top.jianghuling.wechatapp.model.Order">
     insert into express_order
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="orderId != null">
@@ -236,7 +236,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="top.jianghuling.wechatapp.entity.OrderExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="top.jianghuling.wechatapp.model.OrderExample" resultType="java.lang.Long">
     select count(*) from express_order
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -324,7 +324,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="top.jianghuling.wechatapp.entity.Order">
+  <update id="updateByPrimaryKeySelective" parameterType="top.jianghuling.wechatapp.model.Order">
     update express_order
     <set>
       <if test="goodsCode != null">
@@ -378,7 +378,7 @@
     </set>
     where order_id = #{orderId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="top.jianghuling.wechatapp.entity.Order">
+  <update id="updateByPrimaryKey" parameterType="top.jianghuling.wechatapp.model.Order">
     update express_order
     set goods_code = #{goodsCode,jdbcType=VARCHAR},
       note = #{note,jdbcType=VARCHAR},
@@ -400,7 +400,7 @@
   </update>
 
     <!--Created by Jason 2018/9/11-->
-    <resultMap id="BriefOrderMap" type="top.jianghuling.wechatapp.results.BriefOrder">
+    <resultMap id="BriefOrderMap" type="top.jianghuling.wechatapp.model.BriefOrder">
         <id column="order_id" jdbcType="VARCHAR" property="orderId" />
         <result column="note" jdbcType="VARCHAR" property="note" />
         <result column="reward" jdbcType="REAL" property="reward" />
@@ -428,7 +428,7 @@
     </select>
 
     <!--created by jason @2018/9/11-->
-    <resultMap id="OrderLinkMission" type="top.jianghuling.wechatapp.entity.OrderLinkMission">
+    <resultMap id="OrderLinkMission" type="top.jianghuling.wechatapp.model.OrderLinkMission">
         <id column="order_id" jdbcType="VARCHAR" property="orderId" />
         <result column="goods_code" jdbcType="VARCHAR" property="goodsCode" />
         <result column="note" jdbcType="VARCHAR" property="note" />
@@ -460,7 +460,7 @@
     </select>
 
     <!--Create by Jason @2018/9/13-->
-    <update id="updateByKeyLimitVsn" parameterType="top.jianghuling.wechatapp.entity.Order">
+    <update id="updateByKeyLimitVsn" parameterType="top.jianghuling.wechatapp.model.Order">
     update express_order
     set goods_code = #{goodsCode,jdbcType=VARCHAR},
       note = #{note,jdbcType=VARCHAR},

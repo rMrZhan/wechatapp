@@ -1,4 +1,4 @@
-package top.jianghuling.wechatapp.entity;
+package top.jianghuling.wechatapp.model;
 
 public class UserInfo {
     private String userId;

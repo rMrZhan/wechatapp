@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="top.jianghuling.wechatapp.dao.MissionMapper">
-  <resultMap id="BaseResultMap" type="top.jianghuling.wechatapp.entity.Mission">
+  <resultMap id="BaseResultMap" type="top.jianghuling.wechatapp.model.Mission">
     <id column="mission_id" jdbcType="VARCHAR" property="missionId" />
     <result column="order_id" jdbcType="VARCHAR" property="orderId" />
     <result column="taker_id" jdbcType="VARCHAR" property="takerId" />
@@ -69,7 +69,7 @@
   <sql id="Base_Column_List">
     mission_id, order_id, taker_id, accept_time, finish_time
   </sql>
-  <select id="selectByExample" parameterType="top.jianghuling.wechatapp.entity.MissionExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="top.jianghuling.wechatapp.model.MissionExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -93,19 +93,19 @@
     delete from mission
     where mission_id = #{missionId,jdbcType=VARCHAR}
   </delete>
-  <delete id="deleteByExample" parameterType="top.jianghuling.wechatapp.entity.MissionExample">
+  <delete id="deleteByExample" parameterType="top.jianghuling.wechatapp.model.MissionExample">
     delete from mission
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="top.jianghuling.wechatapp.entity.Mission">
+  <insert id="insert" parameterType="top.jianghuling.wechatapp.model.Mission">
     insert into mission (mission_id, order_id, taker_id, 
       accept_time, finish_time)
     values (#{missionId,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, #{takerId,jdbcType=VARCHAR}, 
       #{acceptTime,jdbcType=TIMESTAMP}, #{finishTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="top.jianghuling.wechatapp.entity.Mission">
+  <insert id="insertSelective" parameterType="top.jianghuling.wechatapp.model.Mission">
     insert into mission
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="missionId != null">
@@ -142,7 +142,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="top.jianghuling.wechatapp.entity.MissionExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="top.jianghuling.wechatapp.model.MissionExample" resultType="java.lang.Long">
     select count(*) from mission
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -182,7 +182,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="top.jianghuling.wechatapp.entity.Mission">
+  <update id="updateByPrimaryKeySelective" parameterType="top.jianghuling.wechatapp.model.Mission">
     update mission
     <set>
       <if test="orderId != null">
@@ -200,7 +200,7 @@
     </set>
     where mission_id = #{missionId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="top.jianghuling.wechatapp.entity.Mission">
+  <update id="updateByPrimaryKey" parameterType="top.jianghuling.wechatapp.model.Mission">
     update mission
     set order_id = #{orderId,jdbcType=VARCHAR},
       taker_id = #{takerId,jdbcType=VARCHAR},

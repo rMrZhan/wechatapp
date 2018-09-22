@@ -1,4 +1,4 @@
-package top.jianghuling.wechatapp.entity;
+package top.jianghuling.wechatapp.model;
 
 import java.util.ArrayList;
 import java.util.Date;

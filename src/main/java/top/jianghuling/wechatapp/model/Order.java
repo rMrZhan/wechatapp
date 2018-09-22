@@ -1,8 +1,13 @@
-package top.jianghuling.wechatapp.entity;
+package top.jianghuling.wechatapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Order {
+    @JsonIgnore
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private String orderId;
 
     private String goodsCode;
@@ -19,10 +24,13 @@ public class Order {
 
     private String goodsWeight;
 
+    @JsonIgnore
     private Date starttime;
 
+    @JsonIgnore
     private Date deadline;
 
+    @JsonIgnore
     private Date releaseTime;
 
     private String expressType;
@@ -36,6 +44,34 @@ public class Order {
     private Integer version;
 
     private Date modifyTime;
+
+    private String tRelease;
+    private String tStart;
+    private String tEnd;
+
+    public String gettRelease() {
+        return tRelease;
+    }
+
+    public void settRelease(String tRelease) {
+        this.tRelease = tRelease;
+    }
+
+    public String gettStart() {
+        return tStart;
+    }
+
+    public void settStart(String tStart) {
+        this.tStart = tStart;
+    }
+
+    public String gettEnd() {
+        return tEnd;
+    }
+
+    public void settEnd(String tEnd) {
+        this.tEnd = tEnd;
+    }
 
     public String getOrderId() {
         return orderId;
@@ -107,6 +143,7 @@ public class Order {
 
     public void setStarttime(Date starttime) {
         this.starttime = starttime;
+        tStart = sdf.format(starttime);
     }
 
     public Date getDeadline() {
@@ -115,6 +152,7 @@ public class Order {
 
     public void setDeadline(Date deadline) {
         this.deadline = deadline;
+        tEnd = sdf.format(deadline);
     }
 
     public Date getReleaseTime() {
@@ -123,6 +161,7 @@ public class Order {
 
     public void setReleaseTime(Date releaseTime) {
         this.releaseTime = releaseTime;
+        tRelease = sdf.format(releaseTime);
     }
 
     public String getExpressType() {

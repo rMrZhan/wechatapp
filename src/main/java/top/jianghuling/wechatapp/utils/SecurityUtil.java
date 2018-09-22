@@ -2,16 +2,21 @@ package top.jianghuling.wechatapp.utils;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import top.jianghuling.wechatapp.dao.RedisDao;
 
 
+@Component
 public class SecurityUtil {
 
-    @Autowired
+
     private static RedisDao redisDao;
+
+    @Autowired
+    public void setRedisDao(RedisDao redisDao){
+        this.redisDao =redisDao;
+    }
+
 
     public static String md5(String text) throws Exception {
         //加密后的字符串
@@ -21,7 +26,16 @@ public class SecurityUtil {
 
 
     public static String getUserId(String secret){
-        if(redisDao.get(secret)!=null) return redisDao.get(secret).toString();
-        else return null;
+
+        if(redisDao.get(secret)!=null)
+        {
+            System.out.println("哇哇哇"+redisDao.get(secret));
+            return redisDao.get(secret).toString();
+        }
+        else
+        {
+            System.out.println("是空的！");
+            return null;
+        }
     }
 }
