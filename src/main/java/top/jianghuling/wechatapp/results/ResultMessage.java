@@ -2,7 +2,11 @@ package top.jianghuling.wechatapp.results;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
+@Scope("prototype")
+@Component
 public class ResultMessage {
 
 
@@ -38,14 +42,15 @@ public class ResultMessage {
 
     private int code;
     private String message;
-    public ResultMessage(int resultCode, String resultMessage){
-        this.code = resultCode;
-        this.message=resultMessage;
-    }
-    public ResultMessage(){
 
+    public ResultMessage setInfo(int code, String message){
+        this.code = code;
+        this.message = message;
+        return this;
     }
-    public ResultMessage(int resultCode){
+
+
+    public ResultMessage setInfo(int resultCode){
         if(resultCode==ORDER_ABANDON)
             message="任务已被接单者放弃";
         else if(resultCode==ORDER_CONFIRM_FINISH)
@@ -64,6 +69,8 @@ public class ResultMessage {
             message="操作成功";
         else if(resultCode==OPERATE_FAIL)
             message="操作失败";
+
+        return this;
     }
 
 

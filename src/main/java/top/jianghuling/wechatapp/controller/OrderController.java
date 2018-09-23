@@ -1,6 +1,7 @@
 package top.jianghuling.wechatapp.controller;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -17,7 +18,7 @@ import top.jianghuling.wechatapp.utils.SecurityUtil;
 import java.text.ParseException;
 import java.util.List;
 
-
+@Slf4j
 @RequestMapping("/order")
 @Controller
 public class OrderController {
@@ -28,13 +29,16 @@ public class OrderController {
     @Value("${Constants.LoginState.EXPIRE}")
     private int EXPIRE;
 
+    @Autowired
+    public ResultMessage resultMessage;
+
 
 
     @ResponseBody
     @RequestMapping("/abandon")
     public ResultMessage abandonMission(String orderId){
 
-        return new ResultMessage(orderService.abandonMission(orderId));
+        return resultMessage.setInfo(orderService.abandonMission(orderId));
     }
 
     @RequestMapping("/lookmission")
@@ -70,34 +74,34 @@ public class OrderController {
     @ResponseBody
     public ResultMessage cancelOrderByHost(String secretId){
         String hostId = SecurityUtil.getUserId(secretId);
-        if(hostId==null) return new ResultMessage(EXPIRE,"身份验证过期，请重新登录");
-        return new ResultMessage(orderService.cancelOrderByHost(hostId));
+        if(hostId==null) return resultMessage.setInfo(EXPIRE,"身份验证过期，请重新登录");
+        return resultMessage.setInfo(orderService.cancelOrderByHost(hostId));
 
     }
 
     @RequestMapping("/confirm")
     @ResponseBody
     public ResultMessage confirmFinishMission(String  orderId){
-        return new ResultMessage(orderService.confirmFinishMission(orderId));
+        return  resultMessage.setInfo(orderService.confirmFinishMission(orderId));
     }
 
 
     @RequestMapping("/mfail")
     @ResponseBody
     public ResultMessage missionFail(String orderId){
-        return new ResultMessage(orderService.missionFail(orderId));
+        return resultMessage.setInfo(orderService.missionFail(orderId));
     }
 
     @RequestMapping("/msuccess")
     @ResponseBody
     public ResultMessage missionSuccess(String orderId){
-        return new ResultMessage(orderService.missionSuccess(orderId));
+        return resultMessage.setInfo(orderService.missionSuccess(orderId));
     }
 
     @RequestMapping("/precancel")
     @ResponseBody
     public ResultMessage preCancelOrderByHost(String orderId){
-        return new ResultMessage(orderService.preCancelOrderByHost(orderId));
+        return resultMessage.setInfo(orderService.preCancelOrderByHost(orderId));
     }
 
     @RequestMapping("/issue")
@@ -107,16 +111,16 @@ public class OrderController {
                                          String starttime, String deadline, String expressType ){
         try{
             String releaserId = SecurityUtil.getUserId(secretId);
-            System.out.println("releaserId是：："+releaserId);
-            if(releaserId==null) return new ResultMessage(EXPIRE,"身份验证过期，请重新登录");
-            return new ResultMessage(orderService.releaseNewOrder( releaserId,  goodsCode,  note,  Float.parseFloat(reward),  hostName,  hostPhone,
+            if(releaserId==null)
+                return resultMessage.setInfo(EXPIRE,"身份验证过期，请重新登录");
+            return resultMessage.setInfo(orderService.releaseNewOrder( releaserId,  goodsCode,  note,  Float.parseFloat(reward),  hostName,  hostPhone,
                     takeAddress,  destination,  goodsWeight,
                     MyTimeUtil.parseTime(starttime),  MyTimeUtil.parseTime(deadline),  expressType));
         }catch (ParseException e){
-            return new ResultMessage(OPERATE_FAIL,"日期格式错误"+e.getStackTrace());
+            return resultMessage.setInfo(OPERATE_FAIL,"日期格式错误"+e.getStackTrace());
         }catch (Exception e){
             e.printStackTrace();
-            return new ResultMessage(OPERATE_FAIL,e.getMessage());
+            return resultMessage.setInfo(OPERATE_FAIL,e.getMessage());
         }
 
     }
@@ -126,8 +130,8 @@ public class OrderController {
     @ResponseBody
     public ResultMessage takeMission(String secretId,String orderId){
         String takerId = SecurityUtil.getUserId(secretId);
-        if(takerId==null) return new ResultMessage(EXPIRE,"身份验证过期，请重新登录");
-        return new ResultMessage(orderService.takeMission(takerId,orderId));
+        if(takerId==null) return resultMessage.setInfo(EXPIRE,"身份验证过期，请重新登录");
+        return resultMessage.setInfo(orderService.takeMission(takerId,orderId));
     }
 
 

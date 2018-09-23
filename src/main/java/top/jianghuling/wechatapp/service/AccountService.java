@@ -61,6 +61,9 @@ public class AccountService {
     private RedisDao redisDao;
     @Autowired
     private UserInfoMapper userInfoMapper;
+    @Autowired
+    private ResultMessage resultMessage;
+
 
     /**获取验证码的同时将手机号对应的验证码和时间插入到redis**/
     @Transactional
@@ -73,10 +76,10 @@ public class AccountService {
                     SMSTemplateId, params, SMSSign, "", "");  // 签名参数未提供或者为空时，会使用默认签名发送短信
 
             if (result.result==0){
-                redisDao.set(phoneNumber,verifyCode,1800);
-                return new ResultMessage(OPERATE_SUCCESS,"发送验证码成功");
+                redisDao.set(phoneNumber,verifyCode,300);
+                return  resultMessage.setInfo(OPERATE_SUCCESS,"发送验证码成功");
             }else{
-                return new ResultMessage(OPERATE_FAIL,"发送验证码失败");
+                return  resultMessage.setInfo(OPERATE_FAIL,"发送验证码失败");
             }
 
         } catch (HTTPException e) {
@@ -89,7 +92,7 @@ public class AccountService {
             // 网络IO错误
             e.printStackTrace();
         }
-        return new ResultMessage(OPERATE_FAIL,"发送验证码失败");
+        return resultMessage.setInfo(OPERATE_FAIL,"异常错误");
     }
 
     /**
@@ -113,22 +116,22 @@ public class AccountService {
                 userInfo = new UserInfo();
                 userInfo.setUserId(openid);
                 userInfoMapper.insert(userInfo);
-                return new ResultMessage(LACK_BOTH,thirdSessionId);
+                return resultMessage.setInfo(LACK_BOTH,thirdSessionId);
             }else{
                 if(userInfo.getPhone()==null&&userInfo.getStuId()==null){
-                    return new ResultMessage(LACK_BOTH,thirdSessionId);
+                    return resultMessage.setInfo(LACK_BOTH,thirdSessionId);
                 }else if(userInfo.getPhone()==null){
-                    return new ResultMessage(LACK_PHONE,thirdSessionId);
+                    return resultMessage.setInfo(LACK_PHONE,thirdSessionId);
                 }else if(userInfo.getStuId()==null){
-                    return new ResultMessage(LACK_STUID,thirdSessionId);
+                    return resultMessage.setInfo(LACK_STUID,thirdSessionId);
                 }else{
-                    return new ResultMessage(FULL,thirdSessionId);
+                    return resultMessage.setInfo(FULL,thirdSessionId);
                 }
             }
 
         }catch (Exception e){
 
-            return new ResultMessage(OPERATE_FAIL,"微信服务器异常,请重新登录");
+            return resultMessage.setInfo(OPERATE_FAIL,"微信服务器异常,请重新登录");
         }
 
     }
@@ -139,10 +142,10 @@ public class AccountService {
             user.setStuId(stuId);
             user.setStuPassword(stuPsd);
             userInfoMapper.updateByPrimaryKey(user);
-            return new ResultMessage(OPERATE_SUCCESS,"成功绑定学号");
+            return resultMessage.setInfo(OPERATE_SUCCESS,"成功绑定学号");
         }
 
-        else return new ResultMessage(OPERATE_FAIL,"绑定学号失败");
+        else return resultMessage.setInfo(OPERATE_FAIL,"绑定学号失败");
     }
     @Transactional
     public ResultMessage bondPhone(String userId,String phone,String vCode){
@@ -150,9 +153,9 @@ public class AccountService {
         if(verify.verifyPhone(phone,vCode)){
             user.setPhone(phone);
             userInfoMapper.updateByPrimaryKey(user);
-            return new ResultMessage(OPERATE_SUCCESS,"成功绑定手机");
+            return resultMessage.setInfo(OPERATE_SUCCESS,"成功绑定手机");
         }else
-        return new ResultMessage(OPERATE_FAIL,"验证码或手机号错误");
+        return resultMessage.setInfo(OPERATE_FAIL,"验证码或手机号错误");
 
     }
 

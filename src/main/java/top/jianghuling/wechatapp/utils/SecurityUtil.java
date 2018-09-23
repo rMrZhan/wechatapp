@@ -28,14 +28,10 @@ public class SecurityUtil {
     public static String getUserId(String secret){
 
         if(redisDao.get(secret)!=null)
-        {
-            System.out.println("哇哇哇"+redisDao.get(secret));
             return redisDao.get(secret).toString();
-        }
+
         else
-        {
-            System.out.println("是空的！");
             return null;
-        }
+
     }
 }
