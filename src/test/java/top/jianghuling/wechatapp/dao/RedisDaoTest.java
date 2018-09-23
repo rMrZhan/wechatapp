@@ -24,6 +24,6 @@ public class RedisDaoTest {
 
     @Test
     public void get() {
-        System.out.println(redisDao.get("ketest2"));
+        System.out.println(redisDao.get("2b671835478d1b0547c4a782f43bdd20"));
     }
 }
