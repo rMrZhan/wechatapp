@@ -6,8 +6,10 @@ import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import top.jianghuling.wechatapp.dao.RedisDao;
 import top.jianghuling.wechatapp.results.ResultMessage;
@@ -77,7 +79,11 @@ public class Verify {
 
 
     public boolean verifyPhone(String phone,String vCode){
-        return redisDao.get(phone)==vCode;
+        if(redisDao==null)
+            System.out.println("空的 ");
+        if (redisDao.get(phone)==null)
+            System.out.println("手机号空");
+        return redisDao.get(phone).toString().equals(vCode);
     }
 
 }

@@ -38,6 +38,21 @@ public class ResultMessage {
     @JsonIgnore
     @Value("${Constants.Operate.FAIL}")
     private Byte OPERATE_FAIL;
+    @JsonIgnore
+    @Value("${Constants.LoginState.FULL}")
+    private int LOGIN_FULL;
+    @JsonIgnore
+    @Value("${Constants.LoginState.LACK_PHONE}")
+    private int LOGIN_LACK_PHONE;
+    @JsonIgnore
+    @Value("${Constants.LoginState.LACK_STUID}")
+    private int LOGIN_LACK_STUID;
+    @JsonIgnore
+    @Value("${Constants.LoginState.EXPIRE}")
+    private int LOGIN_EXPIRE;
+    @JsonIgnore
+    @Value("${Constants.LoginState.LACK_BOTH}")
+    private int LOGIN_LACK_BOTH;
 
 
     private int code;
@@ -51,6 +66,7 @@ public class ResultMessage {
 
 
     public ResultMessage setInfo(int resultCode){
+        code = resultCode;
         if(resultCode==ORDER_ABANDON)
             message="任务已被接单者放弃";
         else if(resultCode==ORDER_CONFIRM_FINISH)
@@ -69,6 +85,17 @@ public class ResultMessage {
             message="操作成功";
         else if(resultCode==OPERATE_FAIL)
             message="操作失败";
+        else if(resultCode==LOGIN_FULL)
+            message="信息全";
+        else if(resultCode==LOGIN_LACK_PHONE)
+            message="未绑定手机";
+        else if(resultCode==LOGIN_LACK_STUID)
+            message="未绑定学号";
+        else if(resultCode==LOGIN_EXPIRE)
+            message="身份验证过期，请重新登录";
+        else if(resultCode==LOGIN_LACK_BOTH)
+            message="学号手机号均未绑定";
+
 
         return this;
     }

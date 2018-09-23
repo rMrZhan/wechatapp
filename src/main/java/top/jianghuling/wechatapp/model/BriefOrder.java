@@ -76,7 +76,7 @@ public class BriefOrder {
 
     public void setStarttime(Date starttime) {
         this.starttime = starttime;
-        tStart = sdf.format(starttime);
+        tStart = sdf.format(starttime).substring(11,16);
     }
 
     public Date getDeadline() {
@@ -84,7 +84,7 @@ public class BriefOrder {
     }
 
     public void setDeadline(Date deadline) {
-        tEnd = sdf.format(deadline);
+        tEnd = sdf.format(deadline).substring(11,16);
         this.deadline = deadline;
     }
 

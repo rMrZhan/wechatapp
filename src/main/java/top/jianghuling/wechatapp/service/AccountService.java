@@ -76,7 +76,7 @@ public class AccountService {
                     SMSTemplateId, params, SMSSign, "", "");  // 签名参数未提供或者为空时，会使用默认签名发送短信
 
             if (result.result==0){
-                redisDao.set(phoneNumber,verifyCode,300);
+                redisDao.set(phoneNumber,verifyCode,30000);
                 return  resultMessage.setInfo(OPERATE_SUCCESS,"发送验证码成功");
             }else{
                 return  resultMessage.setInfo(OPERATE_FAIL,"发送验证码失败");
