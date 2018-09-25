@@ -135,7 +135,9 @@ public class RedisConfig {
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
         redisTemplate.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
-        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+//        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+
+        redisTemplate.setValueSerializer(new StringRedisSerializer());
         // 开启事务
         redisTemplate.setEnableTransactionSupport(true);
         redisTemplate.setConnectionFactory(factory);
@@ -144,11 +146,11 @@ public class RedisConfig {
     /**
      * 注入封装RedisTemplate
      *
-     * @return RedisUtil
+     * @return
      * @throws
-     * @Title: redisUtil
-     * @autor lpl
-     * @date 2017年12月21日
+     * @Title:
+     * @autor
+     * @date
      */
     @Bean(name = "redisDao")
     public RedisDao redisDao(RedisTemplate<String, Object> redisTemplate) {

@@ -11,21 +11,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import top.jianghuling.wechatapp.dao.RedisDao;
 import top.jianghuling.wechatapp.results.ResultMessage;
-
-
 @Component
 public class Verify {
-
 
 
     @Value("${Constants.SMS.CodeInvalidTime}")
     private long codeInvalidTime;
 
 
-    @Autowired
-    private RedisDao redisDao;
+//    @Autowired
+//    private RedisDao redisDao;
 
     public boolean verifyStuId(String stuId, String password){
         // 登陆 Url
@@ -78,13 +76,17 @@ public class Verify {
     }
 
 
-    public boolean verifyPhone(String phone,String vCode){
-        if(redisDao==null)
-            System.out.println("空的 ");
-        if (redisDao.get(phone)==null)
-            System.out.println("手机号空");
-        return redisDao.get(phone).toString().equals(vCode);
-    }
+//    @Transactional
+//    public boolean verifyPhone(String phone,String vCode){
+//        if(redisDao==null)
+//            System.out.println("空的 ");
+//        if (redisDao.get(phone)==null)
+//            System.out.println("手机号空");
+//        if(redisDao.get("314fea5e924e8b3bfbc8b82078357686")==null)
+//            System.out.println("ye俄式空");
+//        else System.out.println(redisDao.get("314fea5e924e8b3bfbc8b82078357686"));
+//        return redisDao.get(phone).toString().equals(vCode);
+//    }
 
 }
 

@@ -4,15 +4,23 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-@Repository
+@Component
 public class RedisDao {
 
 
+    @Autowired
     private RedisTemplate<String, Object> redisTemplate;
+
 
     public void setRedisTemplate(RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
@@ -461,7 +469,7 @@ public class RedisDao {
      * 将list放入缓存
      * @param key 键
      * @param value 值
-     * @param seconds
+     * @param
      * @return
      */
     public boolean lSet(String key, List<Object> value) {

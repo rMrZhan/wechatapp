@@ -64,6 +64,24 @@ public class AccountService {
     @Autowired
     private ResultMessage resultMessage;
 
+    @Transactional
+    public ResultMessage bondPhone(String userId,String phone,String vCode){
+        UserInfo user = userInfoMapper.selectByPrimaryKey(userId);
+        redisDao.get(phone);
+        if(redisDao.get(phone).toString().equals(vCode)){
+            user.setPhone(phone);
+            userInfoMapper.updateByPrimaryKey(user);
+            return resultMessage.setInfo(OPERATE_SUCCESS,"成功绑定手机");
+        }else
+        return resultMessage.setInfo(OPERATE_FAIL,"验证码或手机号错误");
+
+//        redisDao.set("wocao","cccccccccccc");
+//        System.out.println(redisDao.get("17711388724"));
+//        return resultMessage.setInfo(OPERATE_SUCCESS,"成功绑定手机");
+
+    }
+
+
 
     /**获取验证码的同时将手机号对应的验证码和时间插入到redis**/
     @Transactional
@@ -76,7 +94,9 @@ public class AccountService {
                     SMSTemplateId, params, SMSSign, "", "");  // 签名参数未提供或者为空时，会使用默认签名发送短信
 
             if (result.result==0){
-                redisDao.set(phoneNumber,verifyCode,30000);
+                redisDao.set(phoneNumber,verifyCode,300);
+ //               redisDao.get(phoneNumber);
+
                 return  resultMessage.setInfo(OPERATE_SUCCESS,"发送验证码成功");
             }else{
                 return  resultMessage.setInfo(OPERATE_FAIL,"发送验证码失败");
@@ -147,17 +167,8 @@ public class AccountService {
 
         else return resultMessage.setInfo(OPERATE_FAIL,"绑定学号失败");
     }
-    @Transactional
-    public ResultMessage bondPhone(String userId,String phone,String vCode){
-        UserInfo user = userInfoMapper.selectByPrimaryKey(userId);
-        if(verify.verifyPhone(phone,vCode)){
-            user.setPhone(phone);
-            userInfoMapper.updateByPrimaryKey(user);
-            return resultMessage.setInfo(OPERATE_SUCCESS,"成功绑定手机");
-        }else
-        return resultMessage.setInfo(OPERATE_FAIL,"验证码或手机号错误");
 
-    }
+
 
 
 
