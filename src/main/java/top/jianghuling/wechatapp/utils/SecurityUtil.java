@@ -3,10 +3,12 @@ package top.jianghuling.wechatapp.utils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import top.jianghuling.wechatapp.dao.RedisDao;
 
 
-@Component
+@Repository
 public class SecurityUtil {
 
 
@@ -27,13 +29,14 @@ public class SecurityUtil {
 
 
 
-    public static String getUserId(String secret){
-
-        if(redisDao.get(secret)!=null)
+    @Transactional   //这里一定要加Transactional
+    public  String getUserId(String secret){
+        try{
             return redisDao.get(secret).toString();
-
-        else
+        }catch (Exception e){
             return null;
+        }
+
 
     }
 }

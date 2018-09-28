@@ -37,7 +37,7 @@ public interface OrderMapper {
     int updateByPrimaryKey(Order record);
 
     //created by Jason @2018/9/9
-    List<BriefOrder> selectBriefOrderByPage(@Param("startIndex")int startIndex, @Param("pageSize")int pageSize, @Param("orderState")int orderState);
+    List<BriefOrder> selectBriefOrderByPage(@Param("userId")String userId, @Param("startIndex")int startIndex, @Param("pageSize")int pageSize, @Param("orderState")int orderState);
     //created by Jason @2018/9/11
     List<OrderLinkMission> selectOrderMission(@Param("hostId")String hostId, @Param("startIndex")int startIndex, @Param("pageSize")int pageSize );
     //created by Jason @2018/9/11

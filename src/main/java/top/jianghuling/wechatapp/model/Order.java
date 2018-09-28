@@ -143,7 +143,7 @@ public class Order {
 
     public void setStarttime(Date starttime) {
         this.starttime = starttime;
-        tStart = sdf.format(starttime);
+        tStart = sdf.format(starttime).substring(11,16);
     }
 
     public Date getDeadline() {
@@ -152,7 +152,7 @@ public class Order {
 
     public void setDeadline(Date deadline) {
         this.deadline = deadline;
-        tEnd = sdf.format(deadline);
+        tEnd = sdf.format(deadline).substring(11,16);
     }
 
     public Date getReleaseTime() {

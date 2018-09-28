@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import top.jianghuling.wechatapp.dao.RedisDao;
 import top.jianghuling.wechatapp.model.Order;
 import top.jianghuling.wechatapp.model.OrderLinkMission;
 import top.jianghuling.wechatapp.model.BriefOrder;
@@ -31,6 +32,8 @@ public class OrderController {
 
     @Autowired
     public ResultMessage resultMessage;
+    @Autowired
+    private SecurityUtil securityUtil;
 
 
 
@@ -44,7 +47,7 @@ public class OrderController {
     @RequestMapping("/lookmission")
     @ResponseBody
     public List<Order> browseMyMissionRecords(String secretId, int pageNum, int pageSize){
-        String takerId = SecurityUtil.getUserId(secretId);
+        String takerId = securityUtil.getUserId(secretId);
         if(takerId==null) return null;
         List <Order> orders = orderService.browseMyMissionRecords(takerId,pageNum,pageSize);
         for(Order o: orders){
@@ -57,23 +60,25 @@ public class OrderController {
     @ResponseBody
     public List<OrderLinkMission> browseMyResleaseOrder(String secretId, int pageNum, int pageSize){
 
-        String takerId = SecurityUtil.getUserId(secretId);
-        if(takerId==null) return null;
+        String userId = securityUtil.getUserId(secretId);
+        if(userId==null) return null;
 
-        return browseMyResleaseOrder(takerId,pageNum,pageSize);
+        return orderService.browseMyReleaseOrder(userId,pageNum,pageSize);
     }
 
     @RequestMapping("/lookissue")
     @ResponseBody
-    public List<BriefOrder> browseReleaseOrders(int pageNum, int pageSize){
-        return  orderService.browseReleaseOrders(pageNum,pageSize);
+    public List<BriefOrder> browseReleaseOrders(String secretId, int pageNum, int pageSize){
+        String userId = securityUtil.getUserId(secretId);
+        if(userId==null) return null;
+        return  orderService.browseReleaseOrders(secretId,pageNum,pageSize);
     }
 
 
     @RequestMapping("/cancel")
     @ResponseBody
     public ResultMessage cancelOrderByHost(String secretId){
-        String hostId = SecurityUtil.getUserId(secretId);
+        String hostId = securityUtil.getUserId(secretId);
         if(hostId==null) return resultMessage.setInfo(EXPIRE,"身份验证过期，请重新登录");
         return resultMessage.setInfo(orderService.cancelOrderByHost(hostId));
 
@@ -110,7 +115,7 @@ public class OrderController {
                                          String takeAddress, String destination, String goodsWeight,
                                          String starttime, String deadline, String expressType ){
         try{
-            String releaserId = SecurityUtil.getUserId(secretId);
+            String releaserId = securityUtil.getUserId(secretId);
             if(releaserId==null)
                 return resultMessage.setInfo(EXPIRE,"身份验证过期，请重新登录");
             return resultMessage.setInfo(orderService.releaseNewOrder( releaserId,  goodsCode,  note,  Float.parseFloat(reward),  hostName,  hostPhone,
@@ -129,7 +134,7 @@ public class OrderController {
     @RequestMapping("/take")
     @ResponseBody
     public ResultMessage takeMission(String secretId,String orderId){
-        String takerId = SecurityUtil.getUserId(secretId);
+        String takerId = securityUtil.getUserId(secretId);
         if(takerId==null) return resultMessage.setInfo(EXPIRE,"身份验证过期，请重新登录");
         return resultMessage.setInfo(orderService.takeMission(takerId,orderId));
     }

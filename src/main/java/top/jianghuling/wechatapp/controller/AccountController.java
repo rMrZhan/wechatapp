@@ -17,6 +17,12 @@ import top.jianghuling.wechatapp.utils.SecurityUtil;
 @RequestMapping("/account")
 public class AccountController {
 
+
+    @Value("${Constants.Operate.SUCCESS}")
+    private Byte OPERATE_SUCCESS;
+    @Value("${Constants.Operate.FAIL}")
+    private Byte OPERATE_FAIL;
+
     @Autowired
     private AccountService accountService;
 
@@ -26,9 +32,13 @@ public class AccountController {
     @Autowired
     private ResultMessage resultMessage;
 
+    @Autowired
+    private SecurityUtil securityUtil;
+
     @ResponseBody
     @RequestMapping("/sms")
     public ResultMessage getSmsCode(String phone){
+        log.info("客户端穿过来的手机号为: "+phone);
         return accountService.getMessageCode(phone);
     }
 
@@ -40,26 +50,31 @@ public class AccountController {
     }
 
 
+    /**
+     * attention: 在controller 用了redisDao，再在对应的service里用redisDao的话会报错
+     * ，除非给controller加上@Transactional，或者给SecurityUtil里用到redisDao的方法加上@Transactional
+     */
     @ResponseBody
     @RequestMapping( "/bondPhone")
-    @Transactional
     public ResultMessage bondPhone(String secretId, String phone,String vCode){
-        String userId;
-        try{
-             userId = SecurityUtil.getUserId(secretId).replace("\"","");
+
+             String userId = securityUtil.getUserId(secretId).replace("\"","");
             if(userId==null) return resultMessage.setInfo(EXPIRE,"身份验证过期，请重新登录");
-        }catch (Exception e){
-            return resultMessage.setInfo(EXPIRE,"身份验证过期，请重新登录");
-        }
+
         //以上代码是为了从secretId转换成userId
-        return accountService.bondPhone(userId,phone,vCode);
+        try{
+            return accountService.bondPhone(userId,phone,vCode);
+        }catch (Exception e){
+            return resultMessage.setInfo(OPERATE_FAIL,"手机号或验证码错误");
+        }
+
     }
 
 
     @RequestMapping("/bondStu")
     @ResponseBody
     public ResultMessage bondStuId(String secretId,String stuId,String stuPsd){
-        String userId = SecurityUtil.getUserId(secretId);
+        String userId = securityUtil.getUserId(secretId);
         if(userId==null)
             return resultMessage.setInfo(EXPIRE,"身份验证过期，请重新登录");
         return accountService.bondStuId(userId,stuId,stuPsd);

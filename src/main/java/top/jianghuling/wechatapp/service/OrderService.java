@@ -251,9 +251,9 @@ public class OrderService {
      * @author Jason
     * */
     @Transactional
-    public List<BriefOrder> browseReleaseOrders(int pageNum, int pageSize){
+    public List<BriefOrder> browseReleaseOrders(String userId,int pageNum, int pageSize){
 
-       return  orderMapper.selectBriefOrderByPage(pageNum*pageSize,pageSize,ORDER_INAIR);
+       return  orderMapper.selectBriefOrderByPage(userId,pageNum*pageSize,pageSize,ORDER_INAIR);
     }
 
     /**
@@ -304,7 +304,7 @@ public class OrderService {
 
     /**
      * Date: 2018/9/18 8:43
-     * Description: 送件人拿到快递之后确认送达，两天之内，如果收件人对订单没有认证任务失败的操作，则完成交易。
+     * Description: 送件人拿到快递之后确认送达，一天之后，如果收件人对订单没有认证任务失败的操作，则完成交易。
      *              收件人也可以主动确认收件，完成交易
      * Concurrency: 前一秒钟①被确认完成任务②被取消订单④认定任务失败
      * Test: 成功
@@ -322,7 +322,7 @@ public class OrderService {
         }else if(orderState == ORDER_FAIL){
             return ORDER_FAIL;
         }else{
-            if(orderMapper.updateStateLock(orderId,ORDER_CONFIRM_FINISH,targetOrder.getVersion())!=1){
+            if(orderMapper.updateStateLock(orderId,ORDER_CONFIRM_FINISH,targetOrder.getVersion())!=0){
                 Mission mission = missionMapper.selectByOrderId(orderId,ORDER_ONGOING);
                 mission.setFinishTime(new Timestamp(date.getTime()));
                 missionMapper.updateByPrimaryKeySelective(mission);
@@ -330,6 +330,18 @@ public class OrderService {
             }else return OPERATE_FAIL;
         }
 
+    }
+
+    @Transactional
+    public int deleteOrder(String orderId){
+        try{
+
+            //TODO: 删除任务
+            orderMapper.deleteByPrimaryKey(orderId);
+            return OPERATE_SUCCESS;
+        }catch (Exception e){
+            return OPERATE_FAIL;
+        }
     }
 
 }

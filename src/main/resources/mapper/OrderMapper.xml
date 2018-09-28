@@ -423,7 +423,8 @@
         select
         <include refid="Brief_Order_List"/>
         from express_order
-        where order_state=#{orderState}
+        where order_state=#{orderState} and releaser_id &lt;&gt;#{userId}
+        order by release_time
         limit #{startIndex},#{pageSize}
     </select>
 

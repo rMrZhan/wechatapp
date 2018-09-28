@@ -134,7 +134,7 @@ public class OrderLinkMission {
     }
 
     public void setStarttime(Date starttime) {
-        tStart = sdf.format(starttime);
+        tStart = sdf.format(starttime).substring(11,16);
         this.starttime = starttime;
     }
 
@@ -143,7 +143,7 @@ public class OrderLinkMission {
     }
 
     public void setDeadline(Date deadline) {
-        tEnd = sdf.format(deadline);
+        tEnd = sdf.format(deadline).substring(11,16);
         this.deadline = deadline;
     }
 

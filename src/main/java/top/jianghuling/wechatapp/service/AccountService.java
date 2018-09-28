@@ -65,19 +65,16 @@ public class AccountService {
     private ResultMessage resultMessage;
 
     @Transactional
-    public ResultMessage bondPhone(String userId,String phone,String vCode){
-        UserInfo user = userInfoMapper.selectByPrimaryKey(userId);
-        redisDao.get(phone);
-        if(redisDao.get(phone).toString().equals(vCode)){
-            user.setPhone(phone);
-            userInfoMapper.updateByPrimaryKey(user);
-            return resultMessage.setInfo(OPERATE_SUCCESS,"成功绑定手机");
-        }else
-        return resultMessage.setInfo(OPERATE_FAIL,"验证码或手机号错误");
+    public ResultMessage bondPhone(String userId,String phone,String vCode)throws Exception{
 
-//        redisDao.set("wocao","cccccccccccc");
-//        System.out.println(redisDao.get("17711388724"));
-//        return resultMessage.setInfo(OPERATE_SUCCESS,"成功绑定手机");
+            UserInfo user = userInfoMapper.selectByPrimaryKey(userId);
+            if(redisDao.get(phone).toString().equals(vCode)){
+                user.setPhone(phone);
+                userInfoMapper.updateByPrimaryKey(user);
+                return resultMessage.setInfo(OPERATE_SUCCESS,"成功绑定手机");
+            }else
+                return resultMessage.setInfo(OPERATE_FAIL,"验证码或手机号错误");
+
 
     }
 
@@ -95,8 +92,6 @@ public class AccountService {
 
             if (result.result==0){
                 redisDao.set(phoneNumber,verifyCode,300);
- //               redisDao.get(phoneNumber);
-
                 return  resultMessage.setInfo(OPERATE_SUCCESS,"发送验证码成功");
             }else{
                 return  resultMessage.setInfo(OPERATE_FAIL,"发送验证码失败");
