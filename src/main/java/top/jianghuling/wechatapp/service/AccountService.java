@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import top.jianghuling.wechatapp.dao.RedisDao;
 import top.jianghuling.wechatapp.dao.UserInfoMapper;
 import top.jianghuling.wechatapp.model.UserInfo;
+import top.jianghuling.wechatapp.results.LoginResultMessage;
 import top.jianghuling.wechatapp.results.ResultMessage;
 import top.jianghuling.wechatapp.utils.SecurityUtil;
 import top.jianghuling.wechatapp.utils.Verify;
@@ -63,6 +64,8 @@ public class AccountService {
     private UserInfoMapper userInfoMapper;
     @Autowired
     private ResultMessage resultMessage;
+    @Autowired
+    private LoginResultMessage loginResultMessage;
 
     @Transactional
     public ResultMessage bondPhone(String userId,String phone,String vCode)throws Exception{
@@ -131,22 +134,22 @@ public class AccountService {
                 userInfo = new UserInfo();
                 userInfo.setUserId(openid);
                 userInfoMapper.insert(userInfo);
-                return resultMessage.setInfo(LACK_BOTH,thirdSessionId);
+                return loginResultMessage.setInfo(LACK_BOTH,thirdSessionId,"","");
             }else{
                 if(userInfo.getPhone()==null&&userInfo.getStuId()==null){
-                    return resultMessage.setInfo(LACK_BOTH,thirdSessionId);
+                    return loginResultMessage.setInfo(LACK_BOTH,thirdSessionId,"","");
                 }else if(userInfo.getPhone()==null){
-                    return resultMessage.setInfo(LACK_PHONE,thirdSessionId);
+                    return loginResultMessage.setInfo(LACK_PHONE,thirdSessionId,"",userInfo.getStuId());
                 }else if(userInfo.getStuId()==null){
-                    return resultMessage.setInfo(LACK_STUID,thirdSessionId);
+                    return loginResultMessage.setInfo(LACK_STUID,thirdSessionId,userInfo.getPhone(),"");
                 }else{
-                    return resultMessage.setInfo(FULL,thirdSessionId);
+                    return loginResultMessage.setInfo(FULL,thirdSessionId,userInfo.getPhone(),userInfo.getStuId());
                 }
             }
 
         }catch (Exception e){
 
-            return resultMessage.setInfo(OPERATE_FAIL,"微信服务器异常,请重新登录");
+            return loginResultMessage.setInfo(OPERATE_FAIL,"微信服务器异常,请重新登录","","");
         }
 
     }

@@ -2,12 +2,9 @@ package top.jianghuling.wechatapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Order {
-    @JsonIgnore
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private String orderId;
 
     private String goodsCode;
@@ -24,13 +21,11 @@ public class Order {
 
     private String goodsWeight;
 
-    @JsonIgnore
+
     private Date starttime;
 
-    @JsonIgnore
     private Date deadline;
 
-    @JsonIgnore
     private Date releaseTime;
 
     private String expressType;
@@ -45,33 +40,10 @@ public class Order {
 
     private Date modifyTime;
 
-    private String tRelease;
-    private String tStart;
-    private String tEnd;
+    private Byte releaserDelTag;
 
-    public String gettRelease() {
-        return tRelease;
-    }
+    private Byte takerDelTag;
 
-    public void settRelease(String tRelease) {
-        this.tRelease = tRelease;
-    }
-
-    public String gettStart() {
-        return tStart;
-    }
-
-    public void settStart(String tStart) {
-        this.tStart = tStart;
-    }
-
-    public String gettEnd() {
-        return tEnd;
-    }
-
-    public void settEnd(String tEnd) {
-        this.tEnd = tEnd;
-    }
 
     public String getOrderId() {
         return orderId;
@@ -143,7 +115,6 @@ public class Order {
 
     public void setStarttime(Date starttime) {
         this.starttime = starttime;
-        tStart = sdf.format(starttime).substring(11,16);
     }
 
     public Date getDeadline() {
@@ -152,7 +123,6 @@ public class Order {
 
     public void setDeadline(Date deadline) {
         this.deadline = deadline;
-        tEnd = sdf.format(deadline).substring(11,16);
     }
 
     public Date getReleaseTime() {
@@ -161,7 +131,6 @@ public class Order {
 
     public void setReleaseTime(Date releaseTime) {
         this.releaseTime = releaseTime;
-        tRelease = sdf.format(releaseTime);
     }
 
     public String getExpressType() {
@@ -211,4 +180,22 @@ public class Order {
     public void setModifyTime(Date modifyTime) {
         this.modifyTime = modifyTime;
     }
+
+    public Byte getReleaserDelTag() {
+        return releaserDelTag;
+    }
+
+    public void setReleaserDelTag(Byte releaserDelTag) {
+        this.releaserDelTag = releaserDelTag;
+    }
+
+    public Byte getTakerDelTag() {
+        return takerDelTag;
+    }
+
+    public void setTakerDelTag(Byte takerDelTag) {
+        this.takerDelTag = takerDelTag;
+    }
+
+
 }

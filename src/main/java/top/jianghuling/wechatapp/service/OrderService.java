@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.jianghuling.wechatapp.dao.MissionMapper;
 import top.jianghuling.wechatapp.dao.OrderMapper;
+import top.jianghuling.wechatapp.dao.SelfDefMapper;
 import top.jianghuling.wechatapp.model.*;
 import top.jianghuling.wechatapp.model.BriefOrder;
 
@@ -33,13 +34,20 @@ public class OrderService {
     private  Byte ORDER_CONFIRM_FINISH;
     @Value("${Constants.OrderState.ORDER_ABANDON}")
     private Byte ORDER_ABANDON;
+    @Value("${Constants.OrderState.ORDER_DELETE}")
+    private Byte ORDER_DELETE;
+
     @Value("${Constants.Operate.SUCCESS}")
     private Byte OPERATE_SUCCESS;
     @Value("${Constants.Operate.FAIL}")
     private Byte OPERATE_FAIL;
 
+    @Value("${Constants.Role.TAKER}")
+    private Byte ROLE_TAKER;
+    @Value("${Constants.Role.RELEASER}")
+    private Byte ROLE_RELEASER;
 
-
+    private final Byte ORDER_DEL_TAG=1;
     private final int initOrderVsn = 0;
 
 
@@ -47,6 +55,8 @@ public class OrderService {
     private OrderMapper orderMapper;
     @Autowired
     private MissionMapper missionMapper;
+    @Autowired
+    private SelfDefMapper selfDefMapper;
 
     /**
      *  ModifyDate: 2018/9/15
@@ -117,7 +127,7 @@ public class OrderService {
         } else if (acceptOrder.getOrderState() == ORDER_ONGOING) {//订单被其他人抢到
             return ORDER_ONGOING;
         } else if(acceptOrder.getOrderState()==ORDER_INAIR){
-            if (orderMapper.updateStateLock(orderId, ORDER_ONGOING, acceptOrder.getVersion()) != 0) {//第二遍筛选，活锁，检查version
+            if (selfDefMapper.updateStateLock(orderId, ORDER_ONGOING, acceptOrder.getVersion()) != 0) {//第二遍筛选，活锁，检查version
                 missionMapper.insert(mission);
                 return OPERATE_SUCCESS;
             } else {
@@ -149,7 +159,7 @@ public class OrderService {
         } else if (currentOrderState == ORDER_ABANDON) {
             return ORDER_ABANDON;//任务被放弃;
         } else {
-            if (orderMapper.updateStateLock(orderId, ORDER_RELEASER_CANCEL, targetOrder.getVersion()) != 0) {
+            if (selfDefMapper.updateStateLock(orderId, ORDER_RELEASER_CANCEL, targetOrder.getVersion()) != 0) {
                 return OPERATE_SUCCESS;
             } else {
                 return orderMapper.selectByPrimaryKey(orderId).getOrderState();//返回值一般为ORDER_ONGOIG或者是ORDER_CONFIRM_FINISH,即被人接单了，提醒用户是否依然取消
@@ -168,7 +178,7 @@ public class OrderService {
     @Transactional
     public int cancelOrderByHost(String orderId){
 //        Date date = new Date();
-        if(orderMapper.updateStateLock(orderId,ORDER_RELEASER_CANCEL,orderMapper.selectByPrimaryKey(orderId).getVersion())!=0){
+        if(selfDefMapper.updateStateLock(orderId,ORDER_RELEASER_CANCEL,orderMapper.selectByPrimaryKey(orderId).getVersion())!=0){
 //            Mission mission = missionMapper.selectByOrderId(orderId,ORDER_ONGOING);
 //            mission.setFinishTime(new Timestamp(date.getTime()));
 //            missionMapper.updateByPrimaryKeySelective(mission);
@@ -195,7 +205,7 @@ public class OrderService {
             return ORDER_RELEASER_CANCEL;
         else if(currentOrderState==ORDER_SUCCESS)
             return ORDER_SUCCESS;
-        else if(orderMapper.updateStateLock(orderId,ORDER_ABANDON,targetOrder.getVersion())!=0){
+        else if(selfDefMapper.updateStateLock(orderId,ORDER_ABANDON,targetOrder.getVersion())!=0){
             return OPERATE_SUCCESS;
         }else{
             return orderMapper.selectByPrimaryKey(orderId).getOrderState(); //两种并发在前一瞬间发生
@@ -221,8 +231,8 @@ public class OrderService {
             //TODO:钱转入公司账户
             return OPERATE_SUCCESS;
         }else{
-            if(orderMapper.updateStateLock(orderId,ORDER_SUCCESS,targetOrder.getVersion())!=0){//如果瞬间前收件人放弃订单
-                orderMapper.updateStateLock(orderId,ORDER_SUCCESS,targetOrder.getVersion()+1);
+            if(selfDefMapper.updateStateLock(orderId,ORDER_SUCCESS,targetOrder.getVersion())!=0){//如果瞬间前收件人放弃订单
+                selfDefMapper.updateStateLock(orderId,ORDER_SUCCESS,targetOrder.getVersion()+1);
                 //TODO:钱转入公司账户
             }
             return OPERATE_SUCCESS;
@@ -240,7 +250,7 @@ public class OrderService {
      */
     @Transactional
     public int missionFail(String orderId){
-        orderMapper.updateStateLock(orderId,ORDER_FAIL,orderMapper.selectByPrimaryKey(orderId).getOrderState());
+        selfDefMapper.updateStateLock(orderId,ORDER_FAIL,orderMapper.selectByPrimaryKey(orderId).getOrderState());
         return OPERATE_SUCCESS;
     }
 
@@ -253,7 +263,7 @@ public class OrderService {
     @Transactional
     public List<BriefOrder> browseReleaseOrders(String userId,int pageNum, int pageSize){
 
-       return  orderMapper.selectBriefOrderByPage(userId,pageNum*pageSize,pageSize,ORDER_INAIR);
+       return  selfDefMapper.selectBriefOrderByPage(userId,pageNum*pageSize,pageSize,ORDER_INAIR);
     }
 
     /**
@@ -263,30 +273,8 @@ public class OrderService {
      * @author Jason
      * */
     @Transactional
-    public List<Order> browseMyMissionRecords(String takerId, int pageNum, int pageSize){
-
-        MissionExample me = new MissionExample();
-        MissionExample.Criteria meCriteria= me.createCriteria();
-        meCriteria.andTakerIdEqualTo(takerId);
-        List<Mission> missionList=missionMapper.selectByExample(me);
-        List<String> orderIds = new ArrayList<>();
-        for(Mission ms : missionList){
-            orderIds.add(ms.getOrderId());
-        }
-
-        OrderExample oe = new OrderExample();
-        OrderExample.Criteria oeCriteria = oe.createCriteria();
-        oeCriteria.andOrderIdIn(orderIds);
-        oe.setOrderByClause("release_time desc");
-        int pageStartIndex = pageNum*pageSize;
-        int pageBound = pageNum*pageStartIndex+pageSize;
-        List<Order> orders =orderMapper.selectByExample(oe);
-        if(pageBound<orders.size())
-            return orders.subList(pageStartIndex,pageSize);
-        else if(pageStartIndex<orders.size()&&pageBound>orders.size())
-            return  orders.subList(pageStartIndex,orders.size()-1);
-        else return new ArrayList<Order>();
-
+    public List<OrderLinkMission> getMyAccept(String takerId, int pageNum, int pageSize){
+        return selfDefMapper.selectMyAccept(takerId,pageNum,pageSize);
     }
 
 
@@ -297,8 +285,8 @@ public class OrderService {
      * @author Jason
      * */
     @Transactional
-    public List<OrderLinkMission> browseMyReleaseOrder(String userId, int pageNum, int pageSize){
-        return orderMapper.selectOrderMission(userId,pageNum*pageSize,pageSize);//已经根据发布时间排序过
+    public List<OrderLinkMission> getMyRelease(String userId, int pageNum, int pageSize){
+        return selfDefMapper.selectMyRelease(userId,pageNum*pageSize,pageSize);//已经根据发布时间排序过
     }
 
 
@@ -322,8 +310,8 @@ public class OrderService {
         }else if(orderState == ORDER_FAIL){
             return ORDER_FAIL;
         }else{
-            if(orderMapper.updateStateLock(orderId,ORDER_CONFIRM_FINISH,targetOrder.getVersion())!=0){
-                Mission mission = missionMapper.selectByOrderId(orderId,ORDER_ONGOING);
+            if(selfDefMapper.updateStateLock(orderId,ORDER_CONFIRM_FINISH,targetOrder.getVersion())!=0){
+                Mission mission = selfDefMapper.selectByOrderId(orderId,ORDER_ONGOING);
                 mission.setFinishTime(new Timestamp(date.getTime()));
                 missionMapper.updateByPrimaryKeySelective(mission);
                 return OPERATE_SUCCESS;
@@ -333,11 +321,19 @@ public class OrderService {
     }
 
     @Transactional
-    public int deleteOrder(String orderId){
+    public int deleteOrder(String orderId, Byte role){
         try{
-
-            //TODO: 删除任务
-            orderMapper.deleteByPrimaryKey(orderId);
+            if(role==ROLE_TAKER){
+                Order uOrder = new Order();
+                uOrder.setOrderId(orderId);
+                uOrder.setTakerDelTag(ORDER_DEL_TAG);
+                orderMapper.updateByPrimaryKeySelective(uOrder);
+            }else{
+                Order uOrder = new Order();
+                uOrder.setOrderId(orderId);
+                uOrder.setReleaserDelTag(ORDER_DEL_TAG);
+                orderMapper.updateByPrimaryKeySelective(uOrder);
+            }
             return OPERATE_SUCCESS;
         }catch (Exception e){
             return OPERATE_FAIL;

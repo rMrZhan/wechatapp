@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import top.jianghuling.wechatapp.dao.RedisDao;
 import top.jianghuling.wechatapp.model.Order;
 import top.jianghuling.wechatapp.model.OrderLinkMission;
 import top.jianghuling.wechatapp.model.BriefOrder;
@@ -46,13 +45,11 @@ public class OrderController {
 
     @RequestMapping("/lookmission")
     @ResponseBody
-    public List<Order> browseMyMissionRecords(String secretId, int pageNum, int pageSize){
+    public List<OrderLinkMission> browseMyMissionRecords(String secretId, int pageNum, int pageSize){
         String takerId = securityUtil.getUserId(secretId);
-        if(takerId==null) return null;
-        List <Order> orders = orderService.browseMyMissionRecords(takerId,pageNum,pageSize);
-        for(Order o: orders){
-            o.setReleaserId("");
-        }
+        if(takerId==null)
+            return null;
+        List <OrderLinkMission> orders = orderService.getMyAccept(takerId,pageNum,pageSize);
         return orders;
     }
 
@@ -61,9 +58,10 @@ public class OrderController {
     public List<OrderLinkMission> browseMyResleaseOrder(String secretId, int pageNum, int pageSize){
 
         String userId = securityUtil.getUserId(secretId);
-        if(userId==null) return null;
+        if(userId==null)
+            return null;
 
-        return orderService.browseMyReleaseOrder(userId,pageNum,pageSize);
+        return orderService.getMyRelease(userId,pageNum,pageSize);
     }
 
     @RequestMapping("/lookissue")

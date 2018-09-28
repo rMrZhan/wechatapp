@@ -5,10 +5,10 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+import top.jianghuling.wechatapp.model.BriefOrder;
 import top.jianghuling.wechatapp.model.Order;
 import top.jianghuling.wechatapp.model.OrderExample;
 import top.jianghuling.wechatapp.model.OrderLinkMission;
-import top.jianghuling.wechatapp.model.BriefOrder;
 
 
 @Mapper
@@ -36,12 +36,5 @@ public interface OrderMapper {
 
     int updateByPrimaryKey(Order record);
 
-    //created by Jason @2018/9/9
-    List<BriefOrder> selectBriefOrderByPage(@Param("userId")String userId, @Param("startIndex")int startIndex, @Param("pageSize")int pageSize, @Param("orderState")int orderState);
-    //created by Jason @2018/9/11
-    List<OrderLinkMission> selectOrderMission(@Param("hostId")String hostId, @Param("startIndex")int startIndex, @Param("pageSize")int pageSize );
-    //created by Jason @2018/9/11
-    int updateByKeyLimitVsn(Order record);
 
-    int updateStateLock(@Param("orderId") String orderId, @Param("newState") Byte newState,@Param("version")int version);
 }

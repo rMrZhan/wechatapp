@@ -1251,6 +1251,126 @@ public class OrderExample {
             addCriterion("modify_time not between", value1, value2, "modifyTime");
             return (Criteria) this;
         }
+
+        public Criteria andReleaserDelTagIsNull() {
+            addCriterion("releaser_del_tag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andReleaserDelTagIsNotNull() {
+            addCriterion("releaser_del_tag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andReleaserDelTagEqualTo(Byte value) {
+            addCriterion("releaser_del_tag =", value, "releaserDelTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andReleaserDelTagNotEqualTo(Byte value) {
+            addCriterion("releaser_del_tag <>", value, "releaserDelTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andReleaserDelTagGreaterThan(Byte value) {
+            addCriterion("releaser_del_tag >", value, "releaserDelTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andReleaserDelTagGreaterThanOrEqualTo(Byte value) {
+            addCriterion("releaser_del_tag >=", value, "releaserDelTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andReleaserDelTagLessThan(Byte value) {
+            addCriterion("releaser_del_tag <", value, "releaserDelTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andReleaserDelTagLessThanOrEqualTo(Byte value) {
+            addCriterion("releaser_del_tag <=", value, "releaserDelTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andReleaserDelTagIn(List<Byte> values) {
+            addCriterion("releaser_del_tag in", values, "releaserDelTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andReleaserDelTagNotIn(List<Byte> values) {
+            addCriterion("releaser_del_tag not in", values, "releaserDelTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andReleaserDelTagBetween(Byte value1, Byte value2) {
+            addCriterion("releaser_del_tag between", value1, value2, "releaserDelTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andReleaserDelTagNotBetween(Byte value1, Byte value2) {
+            addCriterion("releaser_del_tag not between", value1, value2, "releaserDelTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTakerDelTagIsNull() {
+            addCriterion("taker_del_tag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTakerDelTagIsNotNull() {
+            addCriterion("taker_del_tag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTakerDelTagEqualTo(Byte value) {
+            addCriterion("taker_del_tag =", value, "takerDelTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTakerDelTagNotEqualTo(Byte value) {
+            addCriterion("taker_del_tag <>", value, "takerDelTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTakerDelTagGreaterThan(Byte value) {
+            addCriterion("taker_del_tag >", value, "takerDelTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTakerDelTagGreaterThanOrEqualTo(Byte value) {
+            addCriterion("taker_del_tag >=", value, "takerDelTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTakerDelTagLessThan(Byte value) {
+            addCriterion("taker_del_tag <", value, "takerDelTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTakerDelTagLessThanOrEqualTo(Byte value) {
+            addCriterion("taker_del_tag <=", value, "takerDelTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTakerDelTagIn(List<Byte> values) {
+            addCriterion("taker_del_tag in", values, "takerDelTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTakerDelTagNotIn(List<Byte> values) {
+            addCriterion("taker_del_tag not in", values, "takerDelTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTakerDelTagBetween(Byte value1, Byte value2) {
+            addCriterion("taker_del_tag between", value1, value2, "takerDelTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andTakerDelTagNotBetween(Byte value1, Byte value2) {
+            addCriterion("taker_del_tag not between", value1, value2, "takerDelTag");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

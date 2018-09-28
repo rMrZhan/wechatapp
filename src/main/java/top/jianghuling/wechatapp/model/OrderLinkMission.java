@@ -31,6 +31,10 @@ public class OrderLinkMission {
     private Date deadline;
     @JsonIgnore
     private Date releaseTime;
+    @JsonIgnore
+    private Date finishTime;
+    @JsonIgnore
+    private Date acceptTime;
 
     private String expressType;
 
@@ -39,16 +43,62 @@ public class OrderLinkMission {
     private Byte orderState;
 
     @JsonIgnore
-    private Date finishTime;
-
     private String missionId;
-
 
     private String tRelease;
     private String tStart;
     private String tEnd;
     private String tFinish;
+    private String tAccept;
 
+    public String gettAccept() {
+        return tAccept;
+    }
+
+    public void settAccept(String tAccept) {
+        this.tAccept = tAccept;
+    }
+
+    public Date getAcceptTime() {
+        return acceptTime;
+    }
+
+    public void setAcceptTime(Date acceptTime) {
+        tAccept =sdf.format(acceptTime);
+        this.acceptTime = acceptTime;
+    }
+
+    public String gettRelease() {
+        return tRelease;
+    }
+
+    public void settRelease(String tRelease) {
+        this.tRelease = tRelease;
+    }
+
+    public String gettStart() {
+        return tStart;
+    }
+
+    public void settStart(String tStart) {
+        this.tStart = tStart;
+    }
+
+    public String gettEnd() {
+        return tEnd;
+    }
+
+    public void settEnd(String tEnd) {
+        this.tEnd = tEnd;
+    }
+
+    public String gettFinish() {
+        return tFinish;
+    }
+
+    public void settFinish(String tFinish) {
+        this.tFinish = tFinish;
+    }
     public String getMissionId() {
         return missionId;
     }

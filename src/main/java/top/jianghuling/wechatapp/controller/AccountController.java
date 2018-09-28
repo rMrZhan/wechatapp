@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.jianghuling.wechatapp.results.ResultMessage;
@@ -38,7 +37,6 @@ public class AccountController {
     @ResponseBody
     @RequestMapping("/sms")
     public ResultMessage getSmsCode(String phone){
-        log.info("客户端穿过来的手机号为: "+phone);
         return accountService.getMessageCode(phone);
     }
 

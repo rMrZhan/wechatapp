@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import top.jianghuling.wechatapp.model.Mission;
 import top.jianghuling.wechatapp.model.MissionExample;
 
+
 @Mapper
 @Repository
 public interface MissionMapper {
@@ -33,6 +34,5 @@ public interface MissionMapper {
 
     int updateByPrimaryKey(Mission record);
 
-    //create by Jason @2018/9/16
-    Mission selectByOrderId(@Param("orderId") String orderId,@Param("orderState")int orderState);
+
 }

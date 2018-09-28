@@ -209,11 +209,5 @@
     where mission_id = #{missionId,jdbcType=VARCHAR}
   </update>
 
-    <!--created by Jason @2018/9/16-->
-    <select id="selectByOrderId" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List" />
-        from mission
-        where order_id=#{orderId}
-    </select>
+
 </mapper>
