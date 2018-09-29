@@ -31,7 +31,7 @@ public interface SelfDefMapper {
     List<OrderLinkMission> selectMyAccept(@Param("takerId")String takerId, @Param("startIndex")int startIndex, @Param("pageSize")int pageSize);
 
     //create by Jason @2018/9/16
-    Mission selectByOrderId(@Param("orderId") String orderId, @Param("orderState")int orderState);
+    Mission selectMissionByOrderId(@Param("orderId") String orderId, @Param("orderState")int orderState);
 
 
 }

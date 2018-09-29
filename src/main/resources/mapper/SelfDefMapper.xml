@@ -2,6 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="top.jianghuling.wechatapp.dao.SelfDefMapper">
 
+
+    <resultMap id="MissionBaseResultMap" type="top.jianghuling.wechatapp.model.Mission">
+        <id column="mission_id" jdbcType="VARCHAR" property="missionId" />
+        <result column="order_id" jdbcType="VARCHAR" property="orderId" />
+        <result column="taker_id" jdbcType="VARCHAR" property="takerId" />
+        <result column="accept_time" jdbcType="TIMESTAMP" property="acceptTime" />
+        <result column="finish_time" jdbcType="TIMESTAMP" property="finishTime" />
+    </resultMap>
     <!--Created by Jason 2018/9/11-->
     <resultMap id="BriefOrderMap" type="top.jianghuling.wechatapp.model.BriefOrder">
         <id column="order_id" jdbcType="VARCHAR" property="orderId" />
@@ -104,10 +112,13 @@
         modify_time=now()
         where order_id = #{orderId} and version =#{version}
     </update>
-
-
+    <sql id="Base_Column_List">
+    order_id, goods_code, note, reward, host_name, take_address, destination, goods_weight,
+    starttime, deadline, release_time, express_type, releaser_id, host_phone, order_state,
+    version, modify_time, releaser_del_tag, taker_del_tag
+  </sql>
     <!--created by Jason @2018/9/16-->
-    <select id="selectByOrderId" resultMap="BaseResultMap">
+    <select id="selectMissionByOrderId" resultMap="MissionBaseResultMap">
         select
         <include refid="Base_Column_List" />
         from mission

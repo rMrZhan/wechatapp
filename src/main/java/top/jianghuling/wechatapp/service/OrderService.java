@@ -34,8 +34,6 @@ public class OrderService {
     private  Byte ORDER_CONFIRM_FINISH;
     @Value("${Constants.OrderState.ORDER_ABANDON}")
     private Byte ORDER_ABANDON;
-    @Value("${Constants.OrderState.ORDER_DELETE}")
-    private Byte ORDER_DELETE;
 
     @Value("${Constants.Operate.SUCCESS}")
     private Byte OPERATE_SUCCESS;
@@ -311,7 +309,7 @@ public class OrderService {
             return ORDER_FAIL;
         }else{
             if(selfDefMapper.updateStateLock(orderId,ORDER_CONFIRM_FINISH,targetOrder.getVersion())!=0){
-                Mission mission = selfDefMapper.selectByOrderId(orderId,ORDER_ONGOING);
+                Mission mission = selfDefMapper.selectMissionByOrderId(orderId,ORDER_ONGOING);
                 mission.setFinishTime(new Timestamp(date.getTime()));
                 missionMapper.updateByPrimaryKeySelective(mission);
                 return OPERATE_SUCCESS;

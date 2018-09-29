@@ -148,6 +148,7 @@ public class AccountService {
             }
 
         }catch (Exception e){
+            e.printStackTrace();
 
             return loginResultMessage.setInfo(OPERATE_FAIL,"微信服务器异常,请重新登录","","");
         }

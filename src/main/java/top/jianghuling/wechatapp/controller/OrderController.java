@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.jianghuling.wechatapp.model.Order;
@@ -135,6 +136,12 @@ public class OrderController {
         String takerId = securityUtil.getUserId(secretId);
         if(takerId==null) return resultMessage.setInfo(EXPIRE,"身份验证过期，请重新登录");
         return resultMessage.setInfo(orderService.takeMission(takerId,orderId));
+    }
+
+    @RequestMapping("/delete")
+    @ResponseBody
+    public ResultMessage delete(String orderId, String role){
+        return resultMessage.setInfo(orderService.deleteOrder(orderId,Byte.valueOf(role)));
     }
 
 
