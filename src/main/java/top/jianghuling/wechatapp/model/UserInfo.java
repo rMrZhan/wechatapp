@@ -5,11 +5,11 @@ public class UserInfo {
 
     private String phone;
 
-    private String address;
-
     private String stuId;
 
     private String stuPassword;
+
+    private Byte gender;
 
     public String getUserId() {
         return userId;
@@ -27,14 +27,6 @@ public class UserInfo {
         this.phone = phone == null ? null : phone.trim();
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address == null ? null : address.trim();
-    }
-
     public String getStuId() {
         return stuId;
     }
@@ -49,5 +41,13 @@ public class UserInfo {
 
     public void setStuPassword(String stuPassword) {
         this.stuPassword = stuPassword == null ? null : stuPassword.trim();
+    }
+
+    public Byte getGender() {
+        return gender;
+    }
+
+    public void setGender(Byte gender) {
+        this.gender = gender;
     }
 }

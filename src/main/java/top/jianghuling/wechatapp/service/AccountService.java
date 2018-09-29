@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.qcloudsms.SmsSingleSender;
 import com.github.qcloudsms.SmsSingleSenderResult;
 import com.github.qcloudsms.httpclient.HTTPException;
+import org.apache.catalina.User;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -165,6 +166,29 @@ public class AccountService {
         }
 
         else return resultMessage.setInfo(OPERATE_FAIL,"绑定学号失败");
+    }
+
+    @Transactional
+    public ResultMessage bondGender(String userId, byte gender){
+        try{
+            UserInfo user = new UserInfo();
+            user.setUserId(userId);
+            user.setGender(gender);
+            userInfoMapper.updateByPrimaryKeySelective(user);
+            return resultMessage.setInfo(OPERATE_SUCCESS);
+        }catch (Exception e){
+            return resultMessage.setInfo(OPERATE_FAIL);
+        }
+    }
+
+    @Transactional
+    public ResultMessage getGender(String userId){
+        try{
+            return resultMessage.setInfo(OPERATE_SUCCESS,userInfoMapper.selectByPrimaryKey(userId).getGender().toString());
+        }
+        catch (Exception e){
+            return resultMessage.setInfo(OPERATE_FAIL,"1");//失败默认返回"男"
+        }
     }
 
 

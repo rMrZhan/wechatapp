@@ -3,10 +3,10 @@
 <mapper namespace="top.jianghuling.wechatapp.dao.UserInfoMapper">
   <resultMap id="BaseResultMap" type="top.jianghuling.wechatapp.model.UserInfo">
     <id column="user_id" jdbcType="VARCHAR" property="userId" />
-    <result column="phone" jdbcType="CHAR" property="phone" />
-    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
     <result column="stu_id" jdbcType="VARCHAR" property="stuId" />
     <result column="stu_password" jdbcType="VARCHAR" property="stuPassword" />
+    <result column="gender" jdbcType="TINYINT" property="gender" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -67,7 +67,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    user_id, phone, address, stu_id, stu_password
+    user_id, phone, stu_id, stu_password, gender
   </sql>
   <select id="selectByExample" parameterType="top.jianghuling.wechatapp.model.UserInfoExample" resultMap="BaseResultMap">
     select
@@ -100,10 +100,10 @@
     </if>
   </delete>
   <insert id="insert" parameterType="top.jianghuling.wechatapp.model.UserInfo">
-    insert into user_info (user_id, phone, address, 
-      stu_id, stu_password)
-    values (#{userId,jdbcType=VARCHAR}, #{phone,jdbcType=CHAR}, #{address,jdbcType=VARCHAR}, 
-      #{stuId,jdbcType=VARCHAR}, #{stuPassword,jdbcType=VARCHAR})
+    insert into user_info (user_id, phone, stu_id, 
+      stu_password, gender)
+    values (#{userId,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{stuId,jdbcType=VARCHAR}, 
+      #{stuPassword,jdbcType=VARCHAR}, #{gender,jdbcType=TINYINT})
   </insert>
   <insert id="insertSelective" parameterType="top.jianghuling.wechatapp.model.UserInfo">
     insert into user_info
@@ -114,14 +114,14 @@
       <if test="phone != null">
         phone,
       </if>
-      <if test="address != null">
-        address,
-      </if>
       <if test="stuId != null">
         stu_id,
       </if>
       <if test="stuPassword != null">
         stu_password,
+      </if>
+      <if test="gender != null">
+        gender,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -129,16 +129,16 @@
         #{userId,jdbcType=VARCHAR},
       </if>
       <if test="phone != null">
-        #{phone,jdbcType=CHAR},
-      </if>
-      <if test="address != null">
-        #{address,jdbcType=VARCHAR},
+        #{phone,jdbcType=VARCHAR},
       </if>
       <if test="stuId != null">
         #{stuId,jdbcType=VARCHAR},
       </if>
       <if test="stuPassword != null">
         #{stuPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        #{gender,jdbcType=TINYINT},
       </if>
     </trim>
   </insert>
@@ -155,16 +155,16 @@
         user_id = #{record.userId,jdbcType=VARCHAR},
       </if>
       <if test="record.phone != null">
-        phone = #{record.phone,jdbcType=CHAR},
-      </if>
-      <if test="record.address != null">
-        address = #{record.address,jdbcType=VARCHAR},
+        phone = #{record.phone,jdbcType=VARCHAR},
       </if>
       <if test="record.stuId != null">
         stu_id = #{record.stuId,jdbcType=VARCHAR},
       </if>
       <if test="record.stuPassword != null">
         stu_password = #{record.stuPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gender != null">
+        gender = #{record.gender,jdbcType=TINYINT},
       </if>
     </set>
     <if test="_parameter != null">
@@ -174,10 +174,10 @@
   <update id="updateByExample" parameterType="map">
     update user_info
     set user_id = #{record.userId,jdbcType=VARCHAR},
-      phone = #{record.phone,jdbcType=CHAR},
-      address = #{record.address,jdbcType=VARCHAR},
+      phone = #{record.phone,jdbcType=VARCHAR},
       stu_id = #{record.stuId,jdbcType=VARCHAR},
-      stu_password = #{record.stuPassword,jdbcType=VARCHAR}
+      stu_password = #{record.stuPassword,jdbcType=VARCHAR},
+      gender = #{record.gender,jdbcType=TINYINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -186,10 +186,7 @@
     update user_info
     <set>
       <if test="phone != null">
-        phone = #{phone,jdbcType=CHAR},
-      </if>
-      <if test="address != null">
-        address = #{address,jdbcType=VARCHAR},
+        phone = #{phone,jdbcType=VARCHAR},
       </if>
       <if test="stuId != null">
         stu_id = #{stuId,jdbcType=VARCHAR},
@@ -197,15 +194,18 @@
       <if test="stuPassword != null">
         stu_password = #{stuPassword,jdbcType=VARCHAR},
       </if>
+      <if test="gender != null">
+        gender = #{gender,jdbcType=TINYINT},
+      </if>
     </set>
     where user_id = #{userId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="top.jianghuling.wechatapp.model.UserInfo">
     update user_info
-    set phone = #{phone,jdbcType=CHAR},
-      address = #{address,jdbcType=VARCHAR},
+    set phone = #{phone,jdbcType=VARCHAR},
       stu_id = #{stuId,jdbcType=VARCHAR},
-      stu_password = #{stuPassword,jdbcType=VARCHAR}
+      stu_password = #{stuPassword,jdbcType=VARCHAR},
+      gender = #{gender,jdbcType=TINYINT}
     where user_id = #{userId,jdbcType=VARCHAR}
   </update>
 </mapper>

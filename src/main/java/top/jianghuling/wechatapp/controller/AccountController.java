@@ -78,4 +78,21 @@ public class AccountController {
         return accountService.bondStuId(userId,stuId,stuPsd);
     }
 
+    @ResponseBody
+    @RequestMapping("/gender")
+    public ResultMessage bondGender(String secretId,String gender){
+        String userId = securityUtil.getUserId(secretId);
+        if(userId==null)
+            return resultMessage.setInfo(EXPIRE,"身份验证过期，请重新登录");
+        return accountService.bondGender(userId,Byte.valueOf(gender));
+    }
+    @ResponseBody
+    @RequestMapping("/getGender")
+    public ResultMessage getGender(String secretId){
+        String userId = securityUtil.getUserId(secretId);
+        if(userId==null)
+            return resultMessage.setInfo(EXPIRE,"身份验证过期，请重新登录");
+        return accountService.getGender(userId);
+    }
+
 }

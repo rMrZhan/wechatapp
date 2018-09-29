@@ -76,10 +76,9 @@ public class OrderController {
 
     @RequestMapping("/cancel")
     @ResponseBody
-    public ResultMessage cancelOrderByHost(String secretId){
-        String hostId = securityUtil.getUserId(secretId);
-        if(hostId==null) return resultMessage.setInfo(EXPIRE,"身份验证过期，请重新登录");
-        return resultMessage.setInfo(orderService.cancelOrderByHost(hostId));
+    public ResultMessage cancelOrderByHost(String orderId){
+
+        return resultMessage.setInfo(orderService.cancelOrderByHost(orderId));
 
     }
 

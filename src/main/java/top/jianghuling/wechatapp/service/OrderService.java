@@ -71,7 +71,8 @@ public class OrderService {
             String orderId = UUID.randomUUID().toString().replace('-','0');
 
                 Order order = new Order();
-
+                order.setReleaserDelTag(Byte.valueOf("0"));
+                order.setTakerDelTag(Byte.valueOf("0"));
                 order.setOrderState(ORDER_INAIR);
                 order.setReleaserId(releaserId);
                 order.setDeadline(deadline);

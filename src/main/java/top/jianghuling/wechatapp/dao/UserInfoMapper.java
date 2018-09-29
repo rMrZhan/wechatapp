@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 import top.jianghuling.wechatapp.model.UserInfo;
 import top.jianghuling.wechatapp.model.UserInfoExample;
 
-@Mapper
 @Repository
+@Mapper
 public interface UserInfoMapper {
     long countByExample(UserInfoExample example);
 
