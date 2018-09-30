@@ -73,6 +73,7 @@
         limit #{startIndex},#{pageSize}
     </select>
 
+
     <select id="selectMyAccept" resultMap="OrderLinkMission">
         select
         <include refid="Order_Mission"/>
@@ -82,27 +83,6 @@
         limit #{startIndex},#{pageSize}
     </select>
 
-    <!--Create by Jason @2018/9/13-->
-    <update id="updateByKeyLimitVsn" parameterType="top.jianghuling.wechatapp.model.Order">
-    update express_order
-    set goods_code = #{goodsCode,jdbcType=VARCHAR},
-      note = #{note,jdbcType=VARCHAR},
-      reward = #{reward,jdbcType=REAL},
-      host_name = #{hostName,jdbcType=VARCHAR},
-      take_address = #{takeAddress,jdbcType=VARCHAR},
-      destination = #{destination,jdbcType=VARCHAR},
-      goods_weight = #{goodsWeight,jdbcType=VARCHAR},
-      starttime = #{starttime,jdbcType=TIME},
-      deadline = #{deadline,jdbcType=TIME},
-      release_time = #{releaseTime,jdbcType=TIMESTAMP},
-      express_type = #{expressType,jdbcType=VARCHAR},
-      releaser_id = #{releaserId,jdbcType=VARCHAR},
-      host_phone = #{hostPhone,jdbcType=VARCHAR},
-      order_state = #{orderState,jdbcType=TINYINT},
-      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
-      version = version+1
-    where order_id = #{orderId,jdbcType=VARCHAR} and version = #{version,jdbcType=INTEGER}
-  </update>
 
     <update id="updateStateLock">
         update
@@ -112,15 +92,14 @@
         modify_time=now()
         where order_id = #{orderId} and version =#{version}
     </update>
-    <sql id="Base_Column_List">
-    order_id, goods_code, note, reward, host_name, take_address, destination, goods_weight,
-    starttime, deadline, release_time, express_type, releaser_id, host_phone, order_state,
-    version, modify_time, releaser_del_tag, taker_del_tag
+
+    <sql id="Mission_Base_Column_List">
+    mission_id, order_id, taker_id, accept_time, finish_time
   </sql>
     <!--created by Jason @2018/9/16-->
     <select id="selectMissionByOrderId" resultMap="MissionBaseResultMap">
         select
-        <include refid="Base_Column_List" />
+        <include refid="Mission_Base_Column_List" />
         from mission
         where order_id=#{orderId}
     </select>

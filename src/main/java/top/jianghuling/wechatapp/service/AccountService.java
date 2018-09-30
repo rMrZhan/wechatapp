@@ -135,23 +135,23 @@ public class AccountService {
                 userInfo = new UserInfo();
                 userInfo.setUserId(openid);
                 userInfoMapper.insert(userInfo);
-                return loginResultMessage.setInfo(LACK_BOTH,thirdSessionId,"","");
+                return loginResultMessage.setInfo(LACK_BOTH,thirdSessionId,"","",userInfo.getGender());
             }else{
                 if(userInfo.getPhone()==null&&userInfo.getStuId()==null){
-                    return loginResultMessage.setInfo(LACK_BOTH,thirdSessionId,"","");
+                    return loginResultMessage.setInfo(LACK_BOTH,thirdSessionId,"","",userInfo.getGender());
                 }else if(userInfo.getPhone()==null){
-                    return loginResultMessage.setInfo(LACK_PHONE,thirdSessionId,"",userInfo.getStuId());
+                    return loginResultMessage.setInfo(LACK_PHONE,thirdSessionId,"",userInfo.getStuId(),userInfo.getGender());
                 }else if(userInfo.getStuId()==null){
-                    return loginResultMessage.setInfo(LACK_STUID,thirdSessionId,userInfo.getPhone(),"");
+                    return loginResultMessage.setInfo(LACK_STUID,thirdSessionId,userInfo.getPhone(),"",userInfo.getGender());
                 }else{
-                    return loginResultMessage.setInfo(FULL,thirdSessionId,userInfo.getPhone(),userInfo.getStuId());
+                    return loginResultMessage.setInfo(FULL,thirdSessionId,userInfo.getPhone(),userInfo.getStuId(),userInfo.getGender());
                 }
             }
 
         }catch (Exception e){
             e.printStackTrace();
 
-            return loginResultMessage.setInfo(OPERATE_FAIL,"微信服务器异常,请重新登录","","");
+            return loginResultMessage.setInfo(OPERATE_FAIL,"微信服务器异常,请重新登录","","",Byte.valueOf("1"));
         }
 
     }
@@ -181,15 +181,7 @@ public class AccountService {
         }
     }
 
-    @Transactional
-    public ResultMessage getGender(String userId){
-        try{
-            return resultMessage.setInfo(OPERATE_SUCCESS,userInfoMapper.selectByPrimaryKey(userId).getGender().toString());
-        }
-        catch (Exception e){
-            return resultMessage.setInfo(OPERATE_FAIL,"1");//失败默认返回"男"
-        }
-    }
+
 
 
 

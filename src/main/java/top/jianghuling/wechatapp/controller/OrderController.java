@@ -5,10 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import top.jianghuling.wechatapp.model.Order;
 import top.jianghuling.wechatapp.model.OrderLinkMission;
 import top.jianghuling.wechatapp.model.BriefOrder;
 import top.jianghuling.wechatapp.results.ResultMessage;
@@ -70,7 +68,7 @@ public class OrderController {
     public List<BriefOrder> browseReleaseOrders(String secretId, int pageNum, int pageSize){
         String userId = securityUtil.getUserId(secretId);
         if(userId==null) return null;
-        return  orderService.browseReleaseOrders(secretId,pageNum,pageSize);
+        return  orderService.getOtherRelease(secretId,pageNum,pageSize);
     }
 
 

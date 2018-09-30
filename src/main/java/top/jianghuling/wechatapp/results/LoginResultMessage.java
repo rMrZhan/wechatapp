@@ -11,11 +11,22 @@ public class LoginResultMessage extends ResultMessage{
 
     private String phone;
     private String stuId;
-    public LoginResultMessage setInfo(int code, String message, String phone, String stuId){
+    private byte gender;
+
+    public byte getGender() {
+        return gender;
+    }
+
+    public void setGender(byte gender) {
+        this.gender = gender;
+    }
+
+    public LoginResultMessage setInfo(int code, String message, String phone, String stuId,byte gender){
         setCode(code);
         setMessage(message);
         this.phone = phone;
         this.stuId = stuId;
+        this.gender= gender;
         return this;
     }
 

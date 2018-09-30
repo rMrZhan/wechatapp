@@ -11,7 +11,6 @@ import top.jianghuling.wechatapp.model.*;
 import top.jianghuling.wechatapp.model.BriefOrder;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -260,7 +259,7 @@ public class OrderService {
      * @author Jason
     * */
     @Transactional
-    public List<BriefOrder> browseReleaseOrders(String userId,int pageNum, int pageSize){
+    public List<BriefOrder> getOtherRelease(String userId, int pageNum, int pageSize){
 
        return  selfDefMapper.selectBriefOrderByPage(userId,pageNum*pageSize,pageSize,ORDER_INAIR);
     }
@@ -279,13 +278,15 @@ public class OrderService {
 
     /**
      * ModifyDate: 2018/9/17 23:46
-     * Description: 浏览我发布的
+     * Description: 浏览我发布的(包括被接了的，没被接的)
      * Test: 成功
      * @author Jason
      * */
     @Transactional
     public List<OrderLinkMission> getMyRelease(String userId, int pageNum, int pageSize){
+
         return selfDefMapper.selectMyRelease(userId,pageNum*pageSize,pageSize);//已经根据发布时间排序过
+
     }
 
 

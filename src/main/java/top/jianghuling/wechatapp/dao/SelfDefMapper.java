@@ -21,8 +21,7 @@ public interface SelfDefMapper {
     //created by Jason @2018/9/11
     List<OrderLinkMission> selectMyRelease(@Param("hostId")String hostId, @Param("startIndex")int startIndex, @Param("pageSize")int pageSize );
 
-    //created by Jason @2018/9/11
-    int updateByKeyLimitVsn(Order record);
+
 
     //created by Jason @2018/9/11
     int updateStateLock(@Param("orderId") String orderId, @Param("newState") Byte newState,@Param("version")int version);
