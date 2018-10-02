@@ -160,7 +160,7 @@ public class AccountService {
         UserInfo user = userInfoMapper.selectByPrimaryKey(userId);
         if(verify.verifyStuId(stuId,stuPsd)) {
             user.setStuId(stuId);
-            user.setStuPassword(stuPsd);
+            user.setStuPassword("ok");//学号密码不插入数据库
             userInfoMapper.updateByPrimaryKey(user);
             return resultMessage.setInfo(OPERATE_SUCCESS,"成功绑定学号");
         }
