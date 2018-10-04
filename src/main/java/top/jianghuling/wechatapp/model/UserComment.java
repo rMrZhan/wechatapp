@@ -11,8 +11,6 @@ public class UserComment {
 
     private Date submmitDate;
 
-    private Integer score;
-
     public Integer getId() {
         return id;
     }
@@ -43,13 +41,5 @@ public class UserComment {
 
     public void setSubmmitDate(Date submmitDate) {
         this.submmitDate = submmitDate;
-    }
-
-    public Integer getScore() {
-        return score;
-    }
-
-    public void setScore(Integer score) {
-        this.score = score;
     }
 }

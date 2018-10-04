@@ -9,8 +9,8 @@ import top.jianghuling.wechatapp.model.UserComment;
 import top.jianghuling.wechatapp.model.UserCommentExample;
 
 
-@Repository
 @Mapper
+@Repository
 public interface UserCommentMapper {
     long countByExample(UserCommentExample example);
 

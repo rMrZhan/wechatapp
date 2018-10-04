@@ -55,7 +55,7 @@ public class AccountController {
     @ResponseBody
     @RequestMapping( "/bondPhone")
     public ResultMessage bondPhone(String secretId, String phone,String vCode){
-
+        log.info("前端传过来的手机号是"+phone+"secretId是"+secretId+"验证码是"+vCode);
              String userId = securityUtil.getUserId(secretId).replace("\"","");
             if(userId==null) return resultMessage.setInfo(EXPIRE,"身份验证过期，请重新登录");
 

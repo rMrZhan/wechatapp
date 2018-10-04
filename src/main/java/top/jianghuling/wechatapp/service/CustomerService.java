@@ -22,10 +22,9 @@ public class CustomerService {
     private ResultMessage resultMessage;
 
     @Transactional
-    public ResultMessage addComment(String userPhone,String comment,int score){
+    public ResultMessage addComment(String userPhone,String comment){
         try{
             UserComment userComment = new UserComment();
-            userComment.setScore(score);
             userComment.setCommentContent(comment);
             userComment.setUserPhone(userPhone);
             userCommentMapper.insertSelective(userComment);

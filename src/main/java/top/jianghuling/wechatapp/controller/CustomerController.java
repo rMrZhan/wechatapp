@@ -17,7 +17,7 @@ public class CustomerController {
 
     @ResponseBody
     @RequestMapping("/comment")
-    public ResultMessage submitComment(String phone,String comment,String score){
-        return customerService.addComment(phone,comment,Integer.valueOf(score));
+    public ResultMessage submitComment(String phone,String comment){
+        return customerService.addComment(phone,comment);
     }
 }

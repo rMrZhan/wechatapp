@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.qcloudsms.SmsSingleSender;
 import com.github.qcloudsms.SmsSingleSenderResult;
 import com.github.qcloudsms.httpclient.HTTPException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.User;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 
+@Slf4j
 @Service
 public class AccountService {
 
@@ -75,9 +77,13 @@ public class AccountService {
             if(redisDao.get(phone).toString().equals(vCode)){
                 user.setPhone(phone);
                 userInfoMapper.updateByPrimaryKey(user);
+                log.info("绑定手机号成功了");
                 return resultMessage.setInfo(OPERATE_SUCCESS,"成功绑定手机");
-            }else
+            }else{
+                log.info("绑定手机号失败l了"+userId+" " + phone +" " +vCode);
                 return resultMessage.setInfo(OPERATE_FAIL,"验证码或手机号错误");
+            }
+
 
 
     }
@@ -130,13 +136,8 @@ public class AccountService {
             String sessionKey = jsonObject.getString("session_key");
             String thirdSessionId = SecurityUtil.md5(sessionKey);
             redisDao.set(thirdSessionId,openid,redis3SKExpireTime);//相同的key会覆写
-            UserInfo userInfo = userInfoMapper.selectByPrimaryKey(openid);
-            if(userInfo==null){ //新用户第一次登录
-                userInfo = new UserInfo();
-                userInfo.setUserId(openid);
-                userInfoMapper.insert(userInfo);
-                return loginResultMessage.setInfo(LACK_BOTH,thirdSessionId,"","",userInfo.getGender());
-            }else{
+            try{
+                UserInfo userInfo = userInfoMapper.selectByPrimaryKey(openid);
                 if(userInfo.getPhone()==null&&userInfo.getStuId()==null){
                     return loginResultMessage.setInfo(LACK_BOTH,thirdSessionId,"","",userInfo.getGender());
                 }else if(userInfo.getPhone()==null){
@@ -146,11 +147,19 @@ public class AccountService {
                 }else{
                     return loginResultMessage.setInfo(FULL,thirdSessionId,userInfo.getPhone(),userInfo.getStuId(),userInfo.getGender());
                 }
+            }catch (Exception e){
+
+               UserInfo userInfo = new UserInfo();
+                userInfo.setUserId(openid);
+                userInfo.setGender(new Byte("1"));
+                userInfoMapper.insert(userInfo);
+                log.info("login 没报错");
+                return loginResultMessage.setInfo(LACK_BOTH,thirdSessionId,"","",new Byte("1"));
             }
 
         }catch (Exception e){
             e.printStackTrace();
-
+            log.info("报错了++++尴尬");
             return loginResultMessage.setInfo(OPERATE_FAIL,"微信服务器异常,请重新登录","","",Byte.valueOf("1"));
         }
 
@@ -160,12 +169,16 @@ public class AccountService {
         UserInfo user = userInfoMapper.selectByPrimaryKey(userId);
         if(verify.verifyStuId(stuId,stuPsd)) {
             user.setStuId(stuId);
-            user.setStuPassword("ok");//学号密码不插入数据库
+            user.setStuPassword("success");//学号密码不插入数据库
             userInfoMapper.updateByPrimaryKey(user);
+            log.info("绑定学号成功了");
             return resultMessage.setInfo(OPERATE_SUCCESS,"成功绑定学号");
         }
 
-        else return resultMessage.setInfo(OPERATE_FAIL,"绑定学号失败");
+        else  {
+            log.info("绑定学号失败"+userId+" "+stuId+" "+stuPsd);
+        }
+        return resultMessage.setInfo(OPERATE_FAIL,"绑定学号失败");
     }
 
     @Transactional
@@ -180,12 +193,6 @@ public class AccountService {
             return resultMessage.setInfo(OPERATE_FAIL);
         }
     }
-
-
-
-
-
-
 
     public String getOpenidAndSessionKey(String resCode) throws Exception{
         String result = "";
