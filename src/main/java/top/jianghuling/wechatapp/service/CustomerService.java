@@ -8,6 +8,9 @@ import top.jianghuling.wechatapp.dao.UserCommentMapper;
 import top.jianghuling.wechatapp.model.UserComment;
 import top.jianghuling.wechatapp.results.ResultMessage;
 
+/**
+ * @auth Jason
+ */
 @Service
 public class CustomerService {
 

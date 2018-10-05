@@ -14,6 +14,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import top.jianghuling.wechatapp.dao.RedisDao;
 import top.jianghuling.wechatapp.results.ResultMessage;
+
+/**
+ * @auth Jason
+ * @param
+ * @return
+ * @throws
+ */
 @Component
 public class Verify {
 

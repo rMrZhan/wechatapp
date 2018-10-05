@@ -7,7 +7,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import top.jianghuling.wechatapp.dao.RedisDao;
 
-
+/**
+ * @aurhor Jason
+ */
 @Repository
 public class SecurityUtil {
 
@@ -25,9 +27,6 @@ public class SecurityUtil {
         return DigestUtils.md5Hex(text);
 
     }
-
-
-
 
     @Transactional   //这里一定要加Transactional
     public  String getUserId(String secret){

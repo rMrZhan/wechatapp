@@ -1,12 +1,8 @@
 package top.jianghuling.wechatapp.filter;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.ServletComponentScan;
-import org.springframework.stereotype.Component;
 import top.jianghuling.wechatapp.utils.SecurityUtil;
-
 import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -14,6 +10,10 @@ import java.io.IOException;
 
 
 
+
+/**
+ * @auth Jason
+ */
 public class IdentityFilter implements Filter {
 
     @Autowired
