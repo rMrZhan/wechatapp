@@ -15,21 +15,34 @@ import java.util.List;
 @Repository
 public interface SelfDefMapper {
 
-    //created by Jason @2018/9/9
-    List<BriefOrder> selectBriefOrderByPage(@Param("userId")String userId, @Param("startIndex")int startIndex, @Param("pageSize")int pageSize, @Param("orderState")int orderState);
+    /**
+     * @author Jason
+     */
+    List<BriefOrder> selectBriefOrder(@Param("userId")String userId, @Param("startIndex")int startIndex, @Param("pageSize")int pageSize, @Param("orderState")int orderState);
 
-    //created by Jason @2018/9/11
+    /**
+     * @author Jason
+     */
     List<OrderLinkMission> selectMyRelease(@Param("hostId")String hostId, @Param("startIndex")int startIndex, @Param("pageSize")int pageSize );
 
+    /**
+     * @author Jason
+     */
+    List<BriefOrder> selectAllBriefOrder(@Param("userId")String userId, @Param("startIndex")int startIndex, @Param("pageSize")int pageSize);
 
-
-    //created by Jason @2018/9/11
+    /**
+     * @author Jason
+     */
     int updateStateLock(@Param("orderId") String orderId, @Param("newState") Byte newState,@Param("version")int version);
 
-    //created by Jason @2018/9/28
+    /**
+     * @author Jason
+     */
     List<OrderLinkMission> selectMyAccept(@Param("takerId")String takerId, @Param("startIndex")int startIndex, @Param("pageSize")int pageSize);
 
-    //create by Jason @2018/9/16
+    /**
+     * @author Jason
+     */
     Mission selectMissionByOrderId(@Param("orderId") String orderId, @Param("orderState")int orderState);
 
 

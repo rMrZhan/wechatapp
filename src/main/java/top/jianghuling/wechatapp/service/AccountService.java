@@ -62,7 +62,6 @@ public class AccountService {
     @Value("${Constants.LoginState.LACK_BOTH}")
     private int LACK_BOTH;
 
-
     @Autowired
     private Verify verify;
     @Autowired
@@ -81,17 +80,13 @@ public class AccountService {
             if(redisDao.get(phone).toString().equals(vCode)){
                 user.setPhone(phone);
                 userInfoMapper.updateByPrimaryKey(user);
-                log.info("绑定手机号成功了");
                 return resultMessage.setInfo(OPERATE_SUCCESS,"成功绑定手机");
             }else{
-                log.info("绑定手机号失败l了"+userId+" " + phone +" " +vCode);
                 return resultMessage.setInfo(OPERATE_FAIL,"验证码或手机号错误");
             }
 
 
-
     }
-
 
 
     /**获取验证码的同时将手机号对应的验证码和时间插入到redis**/

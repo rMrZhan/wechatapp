@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="top.jianghuling.wechatapp.dao.SelfDefMapper">
 
-
+    <!--created by Jason @2018/9/16-->
     <resultMap id="MissionBaseResultMap" type="top.jianghuling.wechatapp.model.Mission">
         <id column="mission_id" jdbcType="VARCHAR" property="missionId" />
         <result column="order_id" jdbcType="VARCHAR" property="orderId" />
@@ -17,25 +17,38 @@
         <result column="reward" jdbcType="REAL" property="reward" />
         <result column="starttime" jdbcType="TIME" property="starttime" />
         <result column="deadline" jdbcType="TIME" property="deadline" />
-        <result column="version" jdbcType="INTEGER" property="version" />
         <result column="destination" jdbcType="VARCHAR" property="destination" />
         <result column="release_time" jdbcType="TIMESTAMP" property="releaseTime" />
         <result column="express_type" jdbcType="VARCHAR" property="expressType" />
         <result column="goods_weight" jdbcType="VARCHAR" property="goodsWeight" />
         <result column="take_address" jdbcType="VARCHAR" property="takeAddress" />
-        <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
         <result column="order_state" jdbcType="TINYINT" property="orderState" />
     </resultMap>
+
+    <!--created by Jason @2018/9/16-->
     <sql id="Brief_Order_List">
     order_id, note, reward, take_address, destination, goods_weight,
     starttime, deadline, release_time, express_type
   </sql>
-    <select id="selectBriefOrderByPage" resultMap="BriefOrderMap">
+
+    <!--created by Jason @2018/9/16-->
+    <select id="selectBriefOrder" resultMap="BriefOrderMap">
         select
         <include refid="Brief_Order_List"/>
         from express_order
         where order_state=#{orderState} and releaser_id &lt;&gt;#{userId}
         order by release_time
+        limit #{startIndex},#{pageSize}
+    </select>
+
+    <!--created by Jason @2018/9/16-->
+    <select id="selectAllBriefOrder" resultMap="BriefOrderMap">
+        select
+        order_id, note, reward, take_address, destination, goods_weight,
+        starttime, deadline, release_time, express_type,order_state
+        from express_order
+        where releaser_id &lt;&gt;#{userId}
+         order by order_state asc, release_time desc
         limit #{startIndex},#{pageSize}
     </select>
 
@@ -59,11 +72,14 @@
         <result column="finish_time" jdbcType="TIMESTAMP" property="finishTime"/>
         <result column="accept_time" jdbcType="TIMESTAMP" property="acceptTime"/>
     </resultMap>
+    <!--created by Jason @2018/9/16-->
     <sql id="Order_Mission">
     order_id, goods_code, note, reward, host_name, take_address, destination, goods_weight,
     starttime, deadline, release_time, express_type, host_phone, order_state,
     taker_phone,finish_time, accept_time
   </sql>
+
+    <!--created by Jason @2018/9/16-->
     <select id="selectMyRelease" resultMap="OrderLinkMission">
         select
         <include refid="Order_Mission"/>
@@ -73,7 +89,7 @@
         limit #{startIndex},#{pageSize}
     </select>
 
-
+    <!--created by Jason @2018/9/16-->
     <select id="selectMyAccept" resultMap="OrderLinkMission">
         select
         <include refid="Order_Mission"/>
@@ -83,7 +99,7 @@
         limit #{startIndex},#{pageSize}
     </select>
 
-
+    <!--created by Jason @2018/9/16-->
     <update id="updateStateLock">
         update
         express_order
@@ -92,7 +108,7 @@
         modify_time=now()
         where order_id = #{orderId} and version =#{version}
     </update>
-
+    <!--created by Jason @2018/9/16-->
     <sql id="Mission_Base_Column_List">
     mission_id, order_id, taker_id, accept_time, finish_time
   </sql>

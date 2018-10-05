@@ -21,7 +21,15 @@ public class BriefOrder {
     private Date releaseTime;//发布时间
     private String expressType;//快递品牌
     private String orderId;
+    private Byte orderState;
 
+    public Byte getOrderState() {
+        return orderState;
+    }
+
+    public void setOrderState(Byte orderState) {
+        this.orderState = orderState;
+    }
 
     private String tRelease;
     private String tStart;

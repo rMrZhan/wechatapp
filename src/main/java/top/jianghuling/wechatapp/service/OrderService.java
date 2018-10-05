@@ -261,7 +261,8 @@ public class OrderService {
     @Transactional
     public List<BriefOrder> getOtherRelease(String userId, int pageNum, int pageSize){
 
-       return  selfDefMapper.selectBriefOrderByPage(userId,pageNum*pageSize,pageSize,ORDER_INAIR);
+   //    return  selfDefMapper.selectBriefOrder(userId,pageNum*pageSize,pageSize,ORDER_INAIR);
+        return selfDefMapper.selectAllBriefOrder(userId,pageNum*pageSize,pageSize);
     }
 
     /**
