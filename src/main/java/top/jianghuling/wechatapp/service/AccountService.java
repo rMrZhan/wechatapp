@@ -9,6 +9,7 @@ import org.apache.catalina.User;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.jianghuling.wechatapp.dao.RedisDao;
@@ -50,6 +51,8 @@ public class AccountService {
     private Byte OPERATE_SUCCESS;
     @Value("${Constants.Operate.FAIL}")
     private Byte OPERATE_FAIL;
+    @Value("${Constants.Operate.WRONG_PARAM}")
+    private Byte WRONG_PARAM;
     @Value("${Constants.LoginState.FULL}")
     private int FULL;
     @Value("${Constants.LoginState.LACK_PHONE}")
@@ -58,6 +61,7 @@ public class AccountService {
     private int LACK_STUID;
     @Value("${Constants.LoginState.LACK_BOTH}")
     private int LACK_BOTH;
+
 
     @Autowired
     private Verify verify;
@@ -153,32 +157,31 @@ public class AccountService {
                 userInfo.setUserId(openid);
                 userInfo.setGender(new Byte("1"));
                 userInfoMapper.insert(userInfo);
-                log.info("login 没报错");
                 return loginResultMessage.setInfo(LACK_BOTH,thirdSessionId,"","",new Byte("1"));
             }
 
         }catch (Exception e){
             e.printStackTrace();
-            log.info("报错了++++尴尬");
             return loginResultMessage.setInfo(OPERATE_FAIL,"微信服务器异常,请重新登录","","",Byte.valueOf("1"));
         }
 
     }
     @Transactional
     public ResultMessage bondStuId(String userId,String stuId, String stuPsd){
-        UserInfo user = userInfoMapper.selectByPrimaryKey(userId);
-        if(verify.verifyStuId(stuId,stuPsd)) {
-            user.setStuId(stuId);
-            user.setStuPassword("success");//学号密码不插入数据库
-            userInfoMapper.updateByPrimaryKey(user);
-            log.info("绑定学号成功了");
-            return resultMessage.setInfo(OPERATE_SUCCESS,"成功绑定学号");
-        }
-
-        else  {
-            log.info("绑定学号失败"+userId+" "+stuId+" "+stuPsd);
+        try{
+            UserInfo user = userInfoMapper.selectByPrimaryKey(userId);
+            if(verify.verifyStuId(stuId,stuPsd)) {
+                user.setStuId(stuId);
+                user.setStuPassword("success");//学号密码不插入数据库
+                userInfoMapper.updateByPrimaryKey(user);
+                return resultMessage.setInfo(OPERATE_SUCCESS,"成功绑定学号");
+            }
+        }catch (DuplicateKeyException e){
+            resultMessage.setInfo(WRONG_PARAM,"学号已被他人绑定");
         }
         return resultMessage.setInfo(OPERATE_FAIL,"绑定学号失败");
+
+
     }
 
     @Transactional

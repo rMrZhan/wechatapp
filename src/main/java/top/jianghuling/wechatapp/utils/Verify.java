@@ -48,7 +48,6 @@ public class Verify {
             StringBuffer tmpcookies = new StringBuffer();
             for (Cookie c : cookies) {
                 tmpcookies.append(c.toString() + ";");
-                System.out.println("cookies = "+c.toString());
             }
             if(statusCode==302){//重定向到新的URL
                 // 进行登陆后的操作

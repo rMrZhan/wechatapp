@@ -67,8 +67,9 @@ public class OrderController {
     @ResponseBody
     public List<BriefOrder> browseReleaseOrders(String secretId, int pageNum, int pageSize){
         String userId = securityUtil.getUserId(secretId);
-        if(userId==null) return null;
-        return  orderService.getOtherRelease(secretId,pageNum,pageSize);
+        if(userId==null)
+            return null;
+        return  orderService.getOtherRelease(userId,pageNum,pageSize);
     }
 
 
